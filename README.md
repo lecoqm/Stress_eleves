@@ -17,27 +17,41 @@ Version de Python utilisée pour ce projet : `Python 3.13`
 
 ### Installation
 1. **Cloner le dépôt**
+
 ``git clone https://github.com/lecoqm/Stress_eleves.git
-   cd Stress_eleves ``
+
+cd Stress_eleves ``
+
 2. **Installation des dépendances**
+
 ``pip install -r requirements.txt``
+
 ou :
+
 ``uv sync``
+
 3. **Exécution du code**
+
 ``python main.py``
+
 ou 
+
 ``uv run main.py``
+
 Si l'utilisateur souhaite prendre une variable d'intérêt différente de `niveau_stress`:
+
 ``python main.py --target_col mavariable``
+
 ou 
+
 ``uv run main.py --target_col mavariable``
  
 ### Structure du dépôt
-- src/ : code source du projet comprenant les scripts de configuration des hyperparamètres, de pré-traitement des données, de définition des modèles, de traitement des résultats.
-- main.py : fichier principal d'exécution des modèles.
-- requirements.txt : liste des dépendances Python à installer.
-- uv.lock et pyproject.toml : garantissent que la version installée correspond à celle utilisée par l'auteur du dépôt.
-- README.md : description du dépôt et guide d'utilisation.
+- **src/** : code source du projet comprenant les scripts de configuration des hyperparamètres, de pré-traitement des données, de définition des modèles, de traitement des résultats.
+- **main.py** : fichier principal d'exécution des modèles.
+- **requirements.txt** : liste des dépendances Python à installer.
+- **uv.lock** et **pyproject.toml** : garantissent que la version installée correspond à celle utilisée par l'auteur du dépôt.
+- **README.md** : description du dépôt et guide d'utilisation.
 
 Momentanément (?) :
-- notebooks/ : contient le notebook initial duquel est issu le code du projet.
+- **notebooks/** : contient le notebook initial duquel est issu le code du projet.
