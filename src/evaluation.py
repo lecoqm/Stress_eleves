@@ -5,10 +5,11 @@ from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay, roc_curve,
 from sklearn.preprocessing import label_binarize
 from src.config import FIGURES_DIR, TABLES_DIR
 
+
 def evaluate_classifier(model, X_test, y_test, average="weighted"):
     """
     Évalue un modèle de classification (binaire ou multiclasses).
-    Retourne un dictionnaire contenant : 
+    Retourne un dictionnaire contenant :
     la prédiction de la classe, la prediction P(Y=1|X), l'accuracy, la précision et le recall.
     """
 
@@ -30,6 +31,7 @@ def evaluate_classifier(model, X_test, y_test, average="weighted"):
         "recall": recall
     }
 
+
 def plot_confusion_matrix(model, X_test, y_test, model_name, save=True):
     """Génère et sauvegarde la matrice de confusion."""
     y_pred = model.predict(X_test)
@@ -37,31 +39,32 @@ def plot_confusion_matrix(model, X_test, y_test, model_name, save=True):
 
     cm = confusion_matrix(y_test, y_pred, labels=labels)
     disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=labels)
-    
+
     _, ax = plt.subplots(figsize=(6, 6))
     disp.plot(ax=ax, cmap='Blues')
     ax.set_title(f'Matrice de Confusion - {model_name}')
-    
+
     if save:
         filepath = FIGURES_DIR / f"confusion_{model_name}.png"
         plt.savefig(filepath, dpi=300)
         print(f"Matrice sauvegardée : {filepath}")
-    
+
     plt.show()
+
 
 def _compute_roc_metrics(y_true_bin, y_pred_proba, n_classes):
     """Calcule les courbes ROC par classe et la courbe macro-moyenne."""
     metrics = {}
-    
+
     fpr_macro = np.linspace(0, 1, 100)
     tpr_macro_accumulator = np.zeros(100)
-    
+
     for i in range(n_classes):
         fpr, tpr, _ = roc_curve(y_true_bin[:, i], y_pred_proba[:, i])
         roc_auc = auc(fpr, tpr)
         metrics[i] = {'fpr': fpr, 'tpr': tpr, 'auc': roc_auc}
         tpr_macro_accumulator += np.interp(fpr_macro, fpr, tpr)
-    
+
     # Calcul de la moyenne macro
     if n_classes > 0:
         tpr_macro = tpr_macro_accumulator / n_classes
@@ -71,16 +74,17 @@ def _compute_roc_metrics(y_true_bin, y_pred_proba, n_classes):
         auc_macro = 0.0
 
     metrics['macro'] = {
-        'fpr': fpr_macro, 
-        'tpr': tpr_macro, 
+        'fpr': fpr_macro,
+        'tpr': tpr_macro,
         'auc': auc_macro
     }
     return metrics
 
+
 def plot_roc_curves_comparison(models_dict, X_test, y_test, save=True):
     """Compare les courbes ROC de plusieurs modèles (OneVsRest requis pour multiclasse)."""
     plt.figure(figsize=(10, 8))
-    
+
     # Binarisation des labels pour ROC multiclasse
     classes = np.unique(y_test)
     n_classes = len(classes)
@@ -108,18 +112,18 @@ def plot_roc_curves_comparison(models_dict, X_test, y_test, save=True):
             tpr = metrics[i]['tpr']
             label = f'Classe {i}'
             ax.plot(fpr, tpr, linewidth=1, alpha=0.6, label=label)
-        
+
         # Tracé Macro
         fpr_macro = metrics['macro']['fpr']
         tpr_macro = metrics['macro']['tpr']
         auc_macro = metrics['macro']['auc']
-        ax.plot(fpr_macro, tpr_macro, 
-                label=f'Moyenne Macro (AUC = {auc_macro:.2f})', 
+        ax.plot(fpr_macro, tpr_macro,
+                label=f'Moyenne Macro (AUC = {auc_macro:.2f})',
                 color='black', linestyle=':', linewidth=2)
-        
+
         # Ligne diagonale de référence
         ax.plot([0, 1], [0, 1], 'k:', linewidth=1)
-        
+
         # Labels et titre
         ax.set_title(f'{name} - Courbes ROC')
         ax.set_xlabel('Taux de faux positifs (FPR)')
@@ -130,7 +134,7 @@ def plot_roc_curves_comparison(models_dict, X_test, y_test, save=True):
         ax.set_ylim([0, 1])
 
     plt.tight_layout()
-    
+
     if save:
         if 'FIGURES_DIR' in globals():
             filepath = FIGURES_DIR / "roc_comparison.png"
@@ -138,7 +142,7 @@ def plot_roc_curves_comparison(models_dict, X_test, y_test, save=True):
             print(f"ROC sauvegardée : {filepath}")
     plt.show()
 
-    
+
 def generate_performance_table(tree_results, save=True):
     """Crée un DataFrame propre des performances des modèles arbres/boosting."""
     data = []
@@ -148,11 +152,11 @@ def generate_performance_table(tree_results, save=True):
             'RMSE Train': res['rmse_train'],
             'RMSE Test': res['rmse_test'],
             'Meilleurs Paramètres': str(res['params'])
-        })    
+        })
     df_res = pd.DataFrame(data)
     if save:
         filepath = TABLES_DIR / "performance_trees.csv"
         df_res.to_csv(filepath, index=False)
         print(f"Tableau sauvegardé : {filepath}")
-        
+
     return df_res
