@@ -1,3 +1,6 @@
 __pycache__/
 .env
 .ruff_cache
+data/
+reports/
+recording.log

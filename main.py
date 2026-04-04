@@ -20,15 +20,15 @@ logging.basicConfig(
 
 df = con.sql(f"SELECT * FROM read_parquet('{URL_RAW}')").to_df()
 
-X_train, X_test, y_train, y_test, scaler = prepare_datasets(df)
+x_train, x_test, y_train, y_test, scaler = prepare_datasets(df)
 
 # MODELS AND OUTPUTS -----------------------------------------------------------
 
-sm = StressModels(X_train=X_train, y_train=y_train, X_test=X_test, y_test=y_test)
+sm = StressModels(x_train=x_train, y_train=y_train, x_test=x_test, y_test=y_test)
 log_models = sm.train_logistic_regression()
 
 # Visualisation ROC
-plot_roc_curves_comparison(log_models, X_test, y_test)
+plot_roc_curves_comparison(log_models, x_test, y_test)
 
 # Entraînement des Arbres
 important_vars = sm.get_top_features_from_cart()

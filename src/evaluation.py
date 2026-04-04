@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay, roc_curve, auc, precision_score, recall_score
 from sklearn.preprocessing import label_binarize
-from config import FIGURES_DIR, TABLES_DIR
+from src.config import FIGURES_DIR, TABLES_DIR
 
 def evaluate_classifier(model, X_test, y_test, average="weighted"):
     """
@@ -147,7 +147,7 @@ def generate_performance_table(tree_results, save=True):
             'Modèle': res['model_name'],
             'RMSE Train': res['rmse_train'],
             'RMSE Test': res['rmse_test'],
-            'Meilleurs Paramètres': str(res['best_params'])
+            'Meilleurs Paramètres': str(res['params'])
         })    
     df_res = pd.DataFrame(data)
     if save:

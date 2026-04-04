@@ -8,7 +8,7 @@ from sklearn.tree import DecisionTreeRegressor
 from sklearn.metrics import root_mean_squared_error as rmse
 from scipy.stats import randint, uniform
 
-from config import RANDOM_STATE, CV_FOLDS, C_GRID_LASSO
+from src.config import RANDOM_STATE, CV_FOLDS, C_GRID_LASSO
 
 logger = logging.getLogger(__name__)
 
