@@ -12,4 +12,6 @@ ENV PATH="/root/.local/bin/:$PATH"
 COPY pyproject.toml .
 RUN uv sync
 
+COPY main.py .
+COPY src ./src
 CMD ["uv", "run", "main.py"]
