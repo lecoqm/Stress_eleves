@@ -63,6 +63,7 @@ uv run main.py --target_col mavariable
 - **main.py** : fichier principal d'exécution des modèles.
 - **requirements.txt** : liste des dépendances Python à installer.
 - **uv.lock** et **pyproject.toml** : garantissent que la version installée correspond à celle utilisée par l'auteur du dépôt.
+- **Dockerfile** : fichier servant à la construction de l'image Docker.
 - **README.md** : description du dépôt et guide d'utilisation.
 
 Momentanément (?) :

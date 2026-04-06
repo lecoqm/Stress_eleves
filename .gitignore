@@ -5,3 +5,7 @@ data/
 reports/
 recording.log
 .venv
+/.quarto/
+*.html
+*_files
+_site/
