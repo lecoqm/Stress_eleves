@@ -11,7 +11,7 @@ website:
 
 format:
   html:
-    theme: jekyll-theme-cayman
+    theme: minty
     css: styles.css
     toc: true
 
