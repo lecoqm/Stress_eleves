@@ -164,8 +164,7 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#régression-lasso" id="toc-régression-lasso" class="nav-link active" data-scroll-target="#régression-lasso">Régression Lasso</a></li>
-  <li><a href="#validation-croisée" id="toc-validation-croisée" class="nav-link" data-scroll-target="#validation-croisée">Validation croisée</a></li>
+  <li><a href="#validation-croisée" id="toc-validation-croisée" class="nav-link active" data-scroll-target="#validation-croisée">Validation croisée</a></li>
   </ul>
 </nav>
     </div>
@@ -191,8 +190,6 @@ window.Quarto = {
 </header>
 
 
-<section id="régression-lasso" class="level1">
-<h1>Régression Lasso</h1>
 <p>Les résultats de la régression logistique avec toutes les variables et sans pénalisation sont très bons. Cependant, il peut être intéressant de rechercher un modèle plus parcimonieux, n’incluant que les variables ayant la plus grande influence sur le niveau de stress. On effectue donc une régression logistique avec pénalisation l1 (Lasso), pour mettre directement les variables les moins informatives à zéro. La fonction <em>LogisticRegression</em> ne permet pas de combiner une pénalisation l1 avec une approche multi-classe où l’on compare chacune des classes avec le solver <em>liblinear</em>. On adopte donc la stratégie ‘<em>one vs the rest</em>’, qui prend une valeur de la variable ‘niveau_stress’ comme référence. On a vu précédemment que cette stratégie, dans le cas sans pénalisation, fournissait des résultats semblables à la méthode multiclasse.</p>
 <p>(Inclure les résultats)</p>
 <p>Comme précédemment, nous nous intéressons à la matrice de confusion afin de visualiser les performances de la régression.</p>
@@ -201,7 +198,6 @@ window.Quarto = {
 <p>Nous nous intéressons également aux courbes ROC, classe par classe.</p>
 <p>(Inclure les courbes)</p>
 <p>Les résultats sont dans les trois cas meilleurs pour le modèle OneVsRest non pénalisé : la courbe ROC est au dessus de celle associée au modèle Lasso.</p>
-</section>
 <section id="validation-croisée" class="level1">
 <h1>Validation croisée</h1>
 <p>Pour améliorer cette régression, nous réalisons des régressions par validation croisée afin de choisir au mieux la constante de pénalisation <span class="math inline">\(C\)</span> associée au modèle Lasso.</p>

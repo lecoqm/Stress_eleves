@@ -159,14 +159,8 @@ window.Quarto = {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#forêt-aléatoire" id="toc-forêt-aléatoire" class="nav-link active" data-scroll-target="#forêt-aléatoire">Forêt ALéatoire</a></li>
-  </ul>
-</nav>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -190,8 +184,6 @@ window.Quarto = {
 </header>
 
 
-<section id="forêt-aléatoire" class="level1">
-<h1>Forêt ALéatoire</h1>
 <p>Nous choisissons ensuite de tester un type de modèle différent : la forêt aléatoire, en espérant améliorer encore les performances.</p>
 <p>Pour rappel, avec le modèle de régression Lasso, on avait en regroupant les résultats des trois régressions possibles :</p>
 <p>Variables sélectionnées : Index([‘niveau_anxiete’, ‘estime_de_soi’, ‘depression’, ‘maux_de_tete’, ‘tension_arterielle’, ‘qualite_sommeil’, ‘securite’, ‘besoins_elementaires’, ‘reussite_academique’, ‘relation_prof_etudiant’, ‘perspective_insertion_professionnelle’, ‘pression_des_paires’, ‘activites_extrascolaires’, ‘harcelement’], dtype=‘object’)</p>
@@ -207,7 +199,6 @@ window.Quarto = {
 <p>La forêt de <span class="math inline">\(60\)</span> arbres donne de meilleurs résultats que la forêt de <span class="math inline">\(25\)</span> arbres dans les deux cas. Néanmoins la différence n’est pas flagrante si l’on considère les modèles S sur le jeu de données restreint.</p>
 
 
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

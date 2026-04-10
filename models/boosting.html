@@ -159,14 +159,8 @@ window.Quarto = {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#boosting" id="toc-boosting" class="nav-link active" data-scroll-target="#boosting">Boosting</a></li>
-  </ul>
-</nav>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -190,13 +184,10 @@ window.Quarto = {
 </header>
 
 
-<section id="boosting" class="level1">
-<h1>Boosting</h1>
 <p>Nous testons à présent l’approche par Gradient Boosting. Il s’agit dans un premier temps de fixer les hyperparamètres. Dans le cas où l’on ne considère que cinq variables explicatives, on observe qu’un arbre de profondeur <span class="math inline">\(5\)</span> présente une erreur bien moins importante sur les données de test que pour l’arbre de profondeur <span class="math inline">\(10\)</span>. Pour le cas où l’on considère toutes les variables, les deux erreurs sont proches, celle pour l’arbre de profondeur <span class="math inline">\(10\)</span> étant légèrement inférieure à celle de l’arbre de profondeur <span class="math inline">\(5\)</span>. On choisit donc <em>max_depth=5</em> pour comparer les deux cas. On garde le nombre d’arbres/d’itérations à sa valeur par défaut <em>n_estimators = 100</em>. De même, on conserve <em>learning_rate=0.1</em> pour limiter l’overfitting.</p>
 <p>(Inclure résultats)</p>
 
 
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
