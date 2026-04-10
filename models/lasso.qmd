@@ -7,7 +7,6 @@ execute:
   message: false
 ---
 
-# Régression Lasso
 
 Les résultats de la régression logistique avec toutes les variables et sans pénalisation sont très bons. Cependant, il peut être intéressant de rechercher un modèle plus parcimonieux, n'incluant que les variables ayant la plus grande influence sur le niveau de stress. On effectue donc une régression logistique avec pénalisation l1 (Lasso), pour mettre directement les variables les moins informatives à zéro.
 La fonction *LogisticRegression* ne permet pas de combiner une pénalisation l1 avec une approche multi-classe où l'on compare chacune des classes avec le solver *liblinear*. On adopte donc la stratégie '*one vs the rest*', qui prend une valeur de la variable 'niveau_stress' comme référence. On a vu précédemment que cette stratégie, dans le cas sans pénalisation, fournissait des résultats semblables à la méthode multiclasse.

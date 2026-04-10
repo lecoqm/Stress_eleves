@@ -9,6 +9,8 @@ A partir d'un jeu de données anonymisées sur le stress des élèves dans le su
 - Random Forest avec *fine tuning* ;
 - Boosting avec *fine tuning*.
 
+Les résultats sont accessibles à [ce lien](https://lecoqm.github.io/Stress_eleves/)
+
 ## Utilisation du dépôt
 
 ### Prérequis

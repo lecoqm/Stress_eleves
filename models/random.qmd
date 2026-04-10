@@ -7,7 +7,6 @@ execute:
   message: false
 ---
 
-# Forêt ALéatoire
 
 Nous choisissons ensuite de tester un type de modèle différent : la forêt aléatoire, en espérant améliorer encore les performances.
 
