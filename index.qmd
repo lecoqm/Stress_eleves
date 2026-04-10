@@ -1,7 +1,13 @@
 ---
-title: "Rapport"
+title: "Stress des élèves dans le supérieur"
 ---
 
-This is a Quarto website.
+A partir d'un jeu de données anonymisées sur le stress des élèves dans le supérieur en France et les facteurs physiques, psychologiques et de contexte scolaire et économique associés, nous mettons en oeuvre plusieurs modèles de classification et prédiction du niveau de stress (ou éventuellement d'une autre variable d'intérêt choisie par l'utilisateur au sein du jeu de données). Nous comparons ensuite les performances de chacun de ces modèles. Ces derniers sont :
+
+- Régression logistique simple multiclasse
+- Régression logistique simple OVR
+- Régression Lasso avec validation croisée
+- Random Forest avec fine tuning
+- Boosting avec fine tuning
 
 To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
