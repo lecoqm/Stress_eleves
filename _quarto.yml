@@ -6,8 +6,17 @@ website:
   navbar:
     left:
       - href: index.qmd
-        text: Home
-      - about.qmd
+        text: Introduction
+      - text: Modèles
+        menu:
+          - href: models/reglog.qmd
+            text: Regréssions Logistiques
+          - href: models/lasso.qmd
+            text: Régression Lasso
+          - href: models/random.qmd
+            text: Forêt Aléatoire
+          - href: models/boosting.qmd
+            text: Boosting
 
 format:
   html:
