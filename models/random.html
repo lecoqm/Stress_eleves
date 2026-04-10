@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Stress des élèves dans le supérieur – Rapport</title>
+<title>Forêt Aléatoire – Rapport</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -26,23 +26,23 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-05d32ca5d2a80177188d3e3b798b9a1a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-05d32ca5d2a80177188d3e3b798b9a1a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -71,8 +71,37 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
-<link rel="stylesheet" href="styles.css">
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../styles.css">
 </head>
 
 <body class="nav-fixed quarto-light">
@@ -82,7 +111,7 @@ ul.task-list li input[type="checkbox"] {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">Rapport</span>
     </a>
   </div>
@@ -93,7 +122,7 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" aria-current="page"> 
+    <a class="nav-link" href="../index.html"> 
 <span class="menu-text">Introduction</span></a>
   </li>  
   <li class="nav-item dropdown ">
@@ -102,19 +131,19 @@ ul.task-list li input[type="checkbox"] {
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-modèles">    
         <li>
-    <a class="dropdown-item" href="./models/reglog.html">
+    <a class="dropdown-item" href="../models/reglog.html">
  <span class="dropdown-text">Regréssions Logistiques</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./models/lasso.html">
+    <a class="dropdown-item" href="../models/lasso.html">
  <span class="dropdown-text">Régression Lasso</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./models/random.html">
+    <a class="dropdown-item" href="../models/random.html">
  <span class="dropdown-text">Forêt Aléatoire</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./models/boosting.html">
+    <a class="dropdown-item" href="../models/boosting.html">
  <span class="dropdown-text">Boosting</span></a>
   </li>  
     </ul>
@@ -130,15 +159,21 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#forêt-aléatoire" id="toc-forêt-aléatoire" class="nav-link active" data-scroll-target="#forêt-aléatoire">Forêt ALéatoire</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Stress des élèves dans le supérieur</h1>
+<h1 class="title">Forêt Aléatoire</h1>
 </div>
 
 
@@ -155,16 +190,24 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>A partir d’un jeu de données anonymisées sur le stress des élèves dans le supérieur en France et les facteurs physiques, psychologiques et de contexte scolaire et économique associés, nous mettons en oeuvre plusieurs modèles de classification et prédiction du niveau de stress (ou éventuellement d’une autre variable d’intérêt choisie par l’utilisateur au sein du jeu de données). Nous comparons ensuite les performances de chacun de ces modèles. Ces derniers sont :</p>
-<ul>
-<li><strong>Régression logistique simple multiclasse</strong></li>
-<li><strong>Régression logistique simple OVR</strong></li>
-<li><strong>Régression Lasso avec validation croisée</strong></li>
-<li><strong>Random Forest avec fine tuning</strong></li>
-<li><strong>Boosting avec fine tuning</strong></li>
-</ul>
+<section id="forêt-aléatoire" class="level1">
+<h1>Forêt ALéatoire</h1>
+<p>Nous choisissons ensuite de tester un type de modèle différent : la forêt aléatoire, en espérant améliorer encore les performances.</p>
+<p>Pour rappel, avec le modèle de régression Lasso, on avait en regroupant les résultats des trois régressions possibles :</p>
+<p>Variables sélectionnées : Index([‘niveau_anxiete’, ‘estime_de_soi’, ‘depression’, ‘maux_de_tete’, ‘tension_arterielle’, ‘qualite_sommeil’, ‘securite’, ‘besoins_elementaires’, ‘reussite_academique’, ‘relation_prof_etudiant’, ‘perspective_insertion_professionnelle’, ‘pression_des_paires’, ‘activites_extrascolaires’, ‘harcelement’], dtype=‘object’)</p>
+<p>Variables mises de côte : Index([‘historique_sante_mentale’, ‘problem_respiratoire’, ‘niveau_bruit’, ‘conditions_vie’, ‘charge_travail’, ‘soutien_social’])</p>
+<p>Nous observons quelques divergences : ici la variable relative aux problèmes respiratoires est la 5e plus importante, tandis qu’elle n’était pas sélectionnée par la régression Lasso. Les activités extrascolaires et la tension artérielle ont un niveau d’importance égal à zéro selon l’arbre de classification, tandis qu’elles étaient toutes deux sélectionnées par la régression Lasso.</p>
+<p>Nous choisissons dans la suite de considérer un dataset ‘X_S’ ne conservant que les cinq premières variables par ordre d’importance données ci-dessus. Nous choisissons également de limiter la profondeur de l’arbre à 10 afin d’éviter l’overfitting, puis à 5.</p>
+<p>(Inclure le graphe de l’arbre)</p>
+<p>En partant de cet arbre, nous passons à une forêt aléatoire.</p>
+<p>(Résultat de l’erreur1)</p>
+<p>L’erreur est minimale pour <span class="math inline">\(5\leq n\leq10\)</span> arbres dans la forêt. Seulement, cette dernière varie en fait très fortement jusqu’à <span class="math inline">\(n \simeq 20-25\)</span>. Nous évaluons donc le modèle pour deux forêts de <span class="math inline">\(n=25\)</span> et <span class="math inline">\(n=60\)</span> arbres respectivement. Dans le dernier cas, on choisit un nombre d’arbres suffisamment important pour être certains d’être dans une zone où l’erreur s’est stabilisée autour d’une valeur minimale (<span class="math inline">\(0.4\)</span> environ). On diminue également le nombre d’arbres fixé par défaut à <span class="math inline">\(100\)</span>. Cependant, pour les mêmes arguments, on aurait aussi bien pu prendre comme comparaison de <span class="math inline">\(25\)</span>, <span class="math inline">\(n=40\)</span> ou <span class="math inline">\(50\)</span> arbres.</p>
+<p>(Resultat de l’erreur2)</p>
+<p>De même, on observe que l’erreur chute au delà de <span class="math inline">\(n \geq 5\)</span> arbres et se stabilise pour <span class="math inline">\(n \geq 25\)</span> arbres environ. Afin de comparer les résultats on estime aussi les erreurs pour deux forêts de <span class="math inline">\(60\)</span> et <span class="math inline">\(25\)</span> arbres.</p>
+<p>La forêt de <span class="math inline">\(60\)</span> arbres donne de meilleurs résultats que la forêt de <span class="math inline">\(25\)</span> arbres dans les deux cas. Néanmoins la différence n’est pas flagrante si l’on considère les modèles S sur le jeu de données restreint.</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
