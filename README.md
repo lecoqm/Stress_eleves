@@ -63,6 +63,8 @@ uv run main.py --target_col mavariable
 ### Structure du dépôt
 - **src/** : code source du projet comprenant les scripts de configuration des hyperparamètres, de pré-traitement des données, de définition des modèles, de traitement des résultats.
 - **main.py** : fichier principal d'exécution des modèles.
+- **models** : fichiers quarto décrivant les résultats pour chacun des modèles mis en oeuvre.
+- **index.qmd**, **_quarto.yml** et **styles.css** : fichiers (quarto) de configuration du site hébergeant le rapport.
 - **requirements.txt** : liste des dépendances Python à installer.
 - **uv.lock** et **pyproject.toml** : garantissent que la version installée correspond à celle utilisée par l'auteur du dépôt.
 - **Dockerfile** : fichier servant à la construction de l'image Docker.
