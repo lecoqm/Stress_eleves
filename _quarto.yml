@@ -3,6 +3,10 @@ project:
 
 execute:
   enabled: true
+  freeze: auto
+
+exclude:
+  - notebooks/TP.ipynb
 
 jupyter: python3
 
