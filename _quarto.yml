@@ -1,6 +1,11 @@
 project:
   type: website
 
+execute:
+  enabled: true
+
+jupyter: python3
+
 website:
   title: "Rapport"
   navbar:
