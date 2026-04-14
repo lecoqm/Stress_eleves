@@ -11,9 +11,6 @@ execute:
 On réalise une régression logistique sans pénalisation, pour avoir un premier aperçu de la performance d'un modèle simple. La variable d'intérêt (ou le label), encodant le niveau de stress, peut prendre trois valeurs 0, 1, 2. On choisit de comparer la régression multi-classes à la méthode OneVsRest qui fixe une classe de référence et concatène les deux autres afin d'effectuer une régression binaire. Etant donné que notre variable stress est encodée selon trois niveaux, trois régressions OneVsRest sont possibles.
 
 (Inclure les coefficients de la reglog1)
-```{python}
-
-```
 
 
 On retrouve ci-dessus les coefficients de la régression logistique multiclasse associées aux variables pour pour chacune des classes $0, 1, 2$. Les résultats de la régression OneVsRest ci-dessous, eux correspondent aux coefficients que l'on obtient lorsque la classe $i\in\{0,1,2\}$ est prise comme référence et que les deux autres classes sont concaténées comme contrepartie. Il s'agit de coefficients dans chacun des trois cas à une régression pour un problème de classification binaire.
