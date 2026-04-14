@@ -22,13 +22,10 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - name: Install uv
+      - name: Install Python dependencies
         run: |
-          curl -Ls https://astral.sh/uv/install.sh | sh
-          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
-      - name: Install dependencies
-        run: |
-          uv pip install jupyter nbclient ipykernel -r requirements.txt
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
       - name: Set up quarto
         uses: quarto-dev/quarto-actions/setup@v2
       - name: Publish to GitHub Pages (and render)
