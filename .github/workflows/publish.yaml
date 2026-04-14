@@ -7,6 +7,9 @@ on:
       - dev
   workflow_dispatch:
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -14,7 +17,7 @@ jobs:
       contents: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Set up quarto
         uses: quarto-dev/quarto-actions/setup@v2
       - name: Publish to GitHub Pages (and render)
