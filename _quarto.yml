@@ -8,7 +8,7 @@ execute:
 exclude:
   - notebooks/TP.ipynb
 
-jupyter: python3
+jupyter: .venv/bin/python3
 
 website:
   title: "Rapport"

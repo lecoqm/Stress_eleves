@@ -1,0 +1,210 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "---\n",
+        "title: \"Régressions logistiques\"\n",
+        "format: html\n",
+        "execute:\n",
+        "  echo: false\n",
+        "  warning: false\n",
+        "  message: false\n",
+        "---\n",
+        "\n",
+        "\n",
+        "On réalise une régression logistique sans pénalisation, pour avoir un premier aperçu de la performance d'un modèle simple. La variable d'intérêt (ou le label), encodant le niveau de stress, peut prendre trois valeurs 0, 1, 2. On choisit de comparer la régression multi-classes à la méthode OneVsRest qui fixe une classe de référence et concatène les deux autres afin d'effectuer une régression binaire. Etant donné que notre variable stress est encodée selon trois niveaux, trois régressions OneVsRest sont possibles.\n"
+      ],
+      "id": "ba9322dd"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "import pandas as pd\n",
+        "import matplotlib.pyplot as plt\n",
+        "from sklearn.model_selection import train_test_split\n",
+        "from sklearn.linear_model import LogisticRegression\n",
+        "from sklearn.multiclass import OneVsRestClassifier\n",
+        "from sklearn.metrics import ConfusionMatrixDisplay, confusion_matrix, precision_score, recall_score\n",
+        "RANDOM_STATE = 42\n",
+        "\n",
+        "file_name=\"../data/stress.csv\"\n",
+        "stress=pd.read_csv(file_name, sep=';')\n",
+        "stress=stress.iloc[:,1:]\n",
+        "\n",
+        "X, y = stress.drop(['niveau_stress'], axis=1), stress['niveau_stress']\n",
+        "X=(X-X.mean())/X.std()\n",
+        "\n",
+        "# Préparation des sets d'entraînement et de test\n",
+        "X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, stratify=y, random_state=RANDOM_STATE)\n",
+        "\n",
+        "\n",
+        "# Modèles\n",
+        "model_multinom=LogisticRegression(penalty=None, max_iter=1000, random_state=RANDOM_STATE)\n",
+        "model_multinom.fit(X_train, y_train)\n",
+        "\n",
+        "\n",
+        "\n",
+        "def df_coef(model):\n",
+        "    if hasattr(model, 'estimators_'): # Pour gérer le modèle OneVsRest, qui induit un modèle par classe\n",
+        "        \n",
+        "        feature_names = model.feature_names_in_\n",
+        "        classes = model.classes_\n",
+        "        \n",
+        "        data = []\n",
+        "        class_labels = []\n",
+        "        \n",
+        "        for i, estimator in enumerate(model.estimators_):\n",
+        "            coef = estimator.coef_[0] \n",
+        "            data.append(coef)\n",
+        "            class_labels.append(classes[i])\n",
+        "            \n",
+        "        df = pd.DataFrame(\n",
+        "            data,\n",
+        "            columns=feature_names,\n",
+        "            index=class_labels\n",
+        "        )\n",
+        "        return df\n",
+        "    \n",
+        "    return pd.DataFrame(\n",
+        "    model.coef_,\n",
+        "    columns=model.feature_names_in_,\n",
+        "    index=model.classes_\n",
+        ")\n",
+        "\n",
+        "\n",
+        "coef_multiclass = df_coef(model_multinom)\n",
+        "coef_multiclass.T"
+      ],
+      "id": "9e029d6a",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "On retrouve ci-dessus les coefficients de la régression logistique multiclasse associées aux variables pour pour chacune des classes $0, 1, 2$. Les résultats de la régression OneVsRest ci-dessous, eux correspondent aux coefficients que l'on obtient lorsque la classe $i\\in\\{0,1,2\\}$ est prise comme référence et que les deux autres classes sont concaténées comme contrepartie. Il s'agit de coefficients dans chacun des trois cas à une régression pour un problème de classification binaire."
+      ],
+      "id": "422d1580"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "model_ovr=OneVsRestClassifier(LogisticRegression(penalty=None, max_iter=1000, random_state=RANDOM_STATE))\n",
+        "model_ovr.fit(X_train, y_train)\n",
+        "coef_ovr = df_coef(model_ovr)\n",
+        "coef_ovr.T"
+      ],
+      "id": "fb2358b8",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "En utilisant ces modèles nous pouvons donc prédire les labels correspondants. Afin de comparer les performances des différents modèles, nous nous intéressons à leur matrice de confusion, afin de visualiser la répartitions des labels, ainsi que les métriques classiques : accuracy, précision et recall. En premier pour la régression logistique multiclasse :"
+      ],
+      "id": "f4920bf6"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "def evaluate_classifier(model, X_test, y_test, average=\"weighted\", show_confusion=True):\n",
+        "    \"\"\"\n",
+        "    Évalue un modèle de classification sklearn (binaire ou multiclasses).\n",
+        "    Retourne un dictionnaire contenant : la prédiction de la classe, la prediction de la probabilité P(Y=1|X), l'accuracy, la précision et le recall.\n",
+        "    Si show_confusion=True : affiche la matrice de confusion.\n",
+        "    \"\"\"\n",
+        "\n",
+        "    y_pred = model.predict(X_test)\n",
+        "    y_pred_proba = None\n",
+        "    if hasattr(model, \"predict_proba\"):\n",
+        "        y_pred_proba = model.predict_proba(X_test)\n",
+        "\n",
+        "    # Métriques\n",
+        "    accuracy = model.score(X_test, y_test)\n",
+        "    precision = precision_score(y_test, y_pred, average=average)\n",
+        "    recall = recall_score(y_test, y_pred, average=average)\n",
+        "\n",
+        "    print(f\"Accuracy : {accuracy:.3f}\")\n",
+        "    print(f\"Precision: {precision:.3f}\")\n",
+        "    print(f\"Recall   : {recall:.3f}\")\n",
+        "\n",
+        "    # Matrice de confusion\n",
+        "    if show_confusion:\n",
+        "        labels = model.classes_ if hasattr(model, \"classes_\") else None\n",
+        "        cm = confusion_matrix(y_test, y_pred, labels=labels)\n",
+        "\n",
+        "        disp = ConfusionMatrixDisplay(\n",
+        "            confusion_matrix=cm,\n",
+        "            display_labels=labels\n",
+        "        )\n",
+        "        disp.plot()\n",
+        "        plt.grid(False)\n",
+        "        plt.show()\n",
+        "\n",
+        "    return {\n",
+        "        \"y_pred\": y_pred,\n",
+        "        \"y_pred_proba\": y_pred_proba,\n",
+        "        \"accuracy\": accuracy,\n",
+        "        \"precision\": precision,\n",
+        "        \"recall\": recall,\n",
+        "        \"confusion_matrix\": cm if show_confusion else None\n",
+        "    }\n",
+        "\n",
+        "evaluate_multinom = evaluate_classifier(model_multinom, X_test, y_test, \"weighted\", True)"
+      ],
+      "id": "a98bb973",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Puis pour la regréssion OneVsRest :"
+      ],
+      "id": "85b5d4d4"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "evaluate_ovr = evaluate_classifier(model_ovr, X_test, y_test, \"weighted\", True)"
+      ],
+      "id": "31d0912b",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Afin d'afiner la comparaison des modèles, nous traçons les différentes aux courbes ROC des régressions, méthode par méthode.\n",
+        "\n",
+        "![](/reports/figures/roc_comparison.png)\n",
+        "\n",
+        "Nous observons que les deux méthodes de régressions fournissent des résultats équivalents, les courbes sont superposées, il n'y en n'a pas une très clairement au dessus de l'autre dans chacun des trois cas.\n",
+        "\n",
+        "Les résultats des prédictions sont pour les deux méthodes, les meilleurs s'agissant de la classe 1 et les moins bons s'agissant de la classe 0."
+      ],
+      "id": "367acc36"
+    }
+  ],
+  "metadata": {
+    "kernelspec": {
+      "name": "python3",
+      "language": "python",
+      "display_name": "Python 3 (ipykernel)",
+      "path": "/opt/python/share/jupyter/kernels/python3"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 5
+}
