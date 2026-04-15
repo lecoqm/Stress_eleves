@@ -135,7 +135,7 @@ window.Quarto = {
     <ul class="dropdown-menu" aria-labelledby="nav-menu-modèles">    
         <li>
     <a class="dropdown-item" href="../models/reglog.html">
- <span class="dropdown-text">Regréssions Logistiques</span></a>
+ <span class="dropdown-text">Régressions logistiques</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="../models/lasso.html">
@@ -143,7 +143,7 @@ window.Quarto = {
   </li>  
         <li>
     <a class="dropdown-item" href="../models/random.html">
- <span class="dropdown-text">Forêt Aléatoire</span></a>
+ <span class="dropdown-text">Forêt aléatoire</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="../models/boosting.html">
@@ -151,6 +151,10 @@ window.Quarto = {
   </li>  
     </ul>
   </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../slides.html"> 
+<span class="menu-text">Slides</span></a>
+  </li>  
 </ul>
           </div> <!-- /navcollapse -->
             <div class="quarto-navbar-tools">
@@ -188,7 +192,7 @@ window.Quarto = {
 
 
 <p>On réalise une régression logistique sans pénalisation, pour avoir un premier aperçu de la performance d’un modèle simple. La variable d’intérêt (ou le label), encodant le niveau de stress, peut prendre trois valeurs 0, 1, 2. On choisit de comparer la régression multi-classes à la méthode OneVsRest qui fixe une classe de référence et concatène les deux autres afin d’effectuer une régression binaire. Etant donné que notre variable stress est encodée selon trois niveaux, trois régressions OneVsRest sont possibles.</p>
-<div id="51130728" class="cell" data-execution_count="1">
+<div id="38f80cb0" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display" data-execution_count="1">
 <div>
 
@@ -330,7 +334,7 @@ window.Quarto = {
 </div>
 </div>
 <p>On retrouve ci-dessus les coefficients de la régression logistique multiclasse associées aux variables pour pour chacune des classes <span class="math inline">\(0, 1, 2\)</span>. Les résultats de la régression OneVsRest ci-dessous, eux correspondent aux coefficients que l’on obtient lorsque la classe <span class="math inline">\(i\in\{0,1,2\}\)</span> est prise comme référence et que les deux autres classes sont concaténées comme contrepartie. Il s’agit de coefficients dans chacun des trois cas à une régression pour un problème de classification binaire.</p>
-<div id="724900e6" class="cell" data-execution_count="2">
+<div id="9becb67e" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display" data-execution_count="2">
 <div>
 
@@ -472,7 +476,7 @@ window.Quarto = {
 </div>
 </div>
 <p>En utilisant ces modèles nous pouvons donc prédire les labels correspondants. Afin de comparer les performances des différents modèles, nous nous intéressons à leur matrice de confusion, afin de visualiser la répartitions des labels, ainsi que les métriques classiques : accuracy, précision et recall. En premier pour la régression logistique multiclasse :</p>
-<div id="7ce1222a" class="cell" data-execution_count="3">
+<div id="80550cf2" class="cell" data-execution_count="3">
 <div class="cell-output cell-output-stdout">
 <pre><code>Accuracy : 0.877
 Precision: 0.878
@@ -487,7 +491,7 @@ Recall   : 0.877</code></pre>
 </div>
 </div>
 <p>Puis pour la regréssion OneVsRest :</p>
-<div id="eb1337fb" class="cell" data-execution_count="4">
+<div id="d8765a53" class="cell" data-execution_count="4">
 <div class="cell-output cell-output-stdout">
 <pre><code>Accuracy : 0.877
 Precision: 0.878

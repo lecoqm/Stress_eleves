@@ -56,6 +56,90 @@
     "text": "A partir d’un jeu de données anonymisées sur le stress des élèves dans le supérieur en France et les facteurs physiques, psychologiques et de contexte scolaire et économique associés, nous mettons en oeuvre plusieurs modèles de classification et prédiction du niveau de stress (ou éventuellement d’une autre variable d’intérêt choisie par l’utilisateur au sein du jeu de données). Nous comparons ensuite les performances de chacun de ces modèles. Ces derniers sont :\n\nRégression logistique simple multiclasse et OneVsRest\nRégression Lasso avec validation croisée\nRandom Forest avec fine tuning\nBoosting avec fine tuning"
   },
   {
+    "objectID": "slides.html#présentation-du-projet",
+    "href": "slides.html#présentation-du-projet",
+    "title": "Stress des élèves dans le supérieur",
+    "section": "Présentation du projet",
+    "text": "Présentation du projet\nÀ partir d’un jeu de données anonymisées sur le stress des élèves dans le supérieur en France, ce projet vise à :\n\nanalyser les facteurs physiques, psychologiques, scolaires et économiques associés au stress ;\nprédire le niveau de stress ou une autre variable d’intérêt ;\ncomparer les performances de plusieurs modèles de classification."
+  },
+  {
+    "objectID": "slides.html#données",
+    "href": "slides.html#données",
+    "title": "Stress des élèves dans le supérieur",
+    "section": "Données",
+    "text": "Données\n\nSource : data/stress.csv\nVariable cible : niveau_stress\nVariables explicatives :\n\nsommeil\ncharge académique\nsanté mentale\ncontexte économique\netc."
+  },
+  {
+    "objectID": "slides.html#modèles-testés",
+    "href": "slides.html#modèles-testés",
+    "title": "Stress des élèves dans le supérieur",
+    "section": "Modèles testés",
+    "text": "Modèles testés\n\nRégression logistique simple multiclasse et One-vs-Rest\n\nRégression Lasso avec validation croisée\n\nRandom Forest avec fine tuning\n\nBoosting avec fine tuning"
+  },
+  {
+    "objectID": "slides.html#régression-logistique",
+    "href": "slides.html#régression-logistique",
+    "title": "Stress des élèves dans le supérieur",
+    "section": "Régression logistique",
+    "text": "Régression logistique\nOn réalise une régression logistique sans pénalisation, pour avoir un premier aperçu de la performance d’un modèle simple. La variable d’intérêt (ou le label), encodant le niveau de stress, peut prendre trois valeurs 0, 1, 2. On choisit de comparer la régression multi-classes à la méthode OneVsRest qui fixe une classe de référence et concatène les deux autres afin d’effectuer une régression binaire. Etant donné que notre variable stress est encodée selon trois niveaux, trois régressions OneVsRest sont possibles."
+  },
+  {
+    "objectID": "slides.html#résultats-pour-la-régression-logistique",
+    "href": "slides.html#résultats-pour-la-régression-logistique",
+    "title": "Stress des élèves dans le supérieur",
+    "section": "Résultats pour la régression logistique",
+    "text": "Résultats pour la régression logistique\n\nPour la régression logistique multiclasse,"
+  },
+  {
+    "objectID": "slides.html#résultats-pour-la-régression-logistique-1",
+    "href": "slides.html#résultats-pour-la-régression-logistique-1",
+    "title": "Stress des élèves dans le supérieur",
+    "section": "Résultats pour la régression logistique",
+    "text": "Résultats pour la régression logistique\n\nPour la régression OneVsRest,"
+  },
+  {
+    "objectID": "slides.html#régression-lasso",
+    "href": "slides.html#régression-lasso",
+    "title": "Stress des élèves dans le supérieur",
+    "section": "Régression Lasso",
+    "text": "Régression Lasso\n\nLes résultats de la régression logistique avec toutes les variables et sans pénalisation sont très bons.\nCependant, il peut être intéressant de rechercher un modèle plus parcimonieux, n’incluant que les variables ayant la plus grande influence sur le niveau de stress. On effectue donc une régression logistique avec pénalisation l1 (Lasso), pour mettre directement les variables les moins informatives à zéro."
+  },
+  {
+    "objectID": "slides.html#régression-lasso-résultats",
+    "href": "slides.html#régression-lasso-résultats",
+    "title": "Stress des élèves dans le supérieur",
+    "section": "Régression Lasso : résultats",
+    "text": "Régression Lasso : résultats"
+  },
+  {
+    "objectID": "slides.html#random-forest",
+    "href": "slides.html#random-forest",
+    "title": "Stress des élèves dans le supérieur",
+    "section": "Random Forest",
+    "text": "Random Forest\n\nNous choisissons ensuite de tester un type de modèle différent : la forêt aléatoire, en espérant améliorer encore les performances.\nNous choisissons dans la suite de considérer un dataset ‘X_S’ ne conservant que les cinq premières variables par ordre d’importance données ci-dessus. Nous choisissons également de limiter la profondeur de l’arbre à 10 afin d’éviter l’overfitting, puis à 5."
+  },
+  {
+    "objectID": "slides.html#random-forest-résultats",
+    "href": "slides.html#random-forest-résultats",
+    "title": "Stress des élèves dans le supérieur",
+    "section": "Random Forest : résultats",
+    "text": "Random Forest : résultats\n\n\nMAPE test : 26273930877306604.00\nRMSE test : 0.357"
+  },
+  {
+    "objectID": "slides.html#boosting",
+    "href": "slides.html#boosting",
+    "title": "Stress des élèves dans le supérieur",
+    "section": "Boosting",
+    "text": "Boosting\nNous testons à présent l’approche par Gradient Boosting. Il s’agit dans un premier temps de fixer les hyperparamètres. On choisit max_depth=5 pour comparer les deux cas. On garde le nombre d’arbres/d’itérations à sa valeur par défaut n_estimators = 100. De même, on conserve learning_rate=0.1 pour limiter l’overfitting."
+  },
+  {
+    "objectID": "slides.html#boosting-résultats",
+    "href": "slides.html#boosting-résultats",
+    "title": "Stress des élèves dans le supérieur",
+    "section": "Boosting : résultats",
+    "text": "Boosting : résultats\n\n\nBoosting sur variables sélectionnées\nMAPE test : 23797669245499824.00\nRMSE test : 0.439\n\nBoosting sur toutes les variables\nMAPE test : 30916199848414300.00\nRMSE test : 0.394\n\nGB optimisé (n=164, lr=0.04)\nMAPE test : 28023023808308908.00\nRMSE test : 0.375\n\nGB optimisé S (n=101, lr=0.05)\nMAPE test : 24394636886880068.00\nRMSE test : 0.393"
+  },
+  {
     "objectID": "models/reglog.html",
     "href": "models/reglog.html",
     "title": "Régressions logistiques",
