@@ -7,12 +7,9 @@ ENV DEBIAN_FRONTEND=noninteractive \
 
 WORKDIR /app
 
-RUN set -eux; \
-    rm -rf /var/lib/apt/lists/*; \
-    apt-get clean; \
-    for i in 1 2 3; do \
-        apt-get update && break || sleep 10; \
-    done; \
+RUN rm -rf /var/lib/apt/lists/* && \
+    apt-get clean && \
+    apt-get update && \
     apt-get install -y --no-install-recommends \
         python3 \
         python3-pip \
@@ -21,7 +18,7 @@ RUN set -eux; \
         ca-certificates \
         build-essential \
         libjpeg-dev \
-        zlib1g-dev; \
+        zlib1g-dev && \
     rm -rf /var/lib/apt/lists/*
 
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh
