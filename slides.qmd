@@ -1,0 +1,377 @@
+---
+title: "Stress des élèves dans le supérieur"
+subtitle: "Synthèse des principaux résultats"
+format:
+  revealjs:
+    theme: simple
+    slide-number: true
+    chalkboard: false
+    toc: false
+    embed-resources: true
+---
+
+## Présentation du projet
+
+À partir d’un jeu de données anonymisées sur le **stress des élèves dans le supérieur en France**, ce projet vise à :
+
+- analyser les facteurs **physiques**, **psychologiques**, **scolaires** et **économiques** associés au stress ;
+- prédire le **niveau de stress** ou une autre variable d’intérêt ;
+- comparer les performances de plusieurs modèles de classification.
+
+
+## Données
+- Source : `data/stress.csv`
+- Variable cible : `niveau_stress`
+- Variables explicatives :
+  - sommeil
+  - charge académique
+  - santé mentale
+  - contexte économique
+  - etc.
+
+## Modèles testés
+
+- **Régression logistique** simple multiclasse et One-vs-Rest  
+- **Régression Lasso** avec validation croisée  
+- **Random Forest** avec fine tuning  
+- **Boosting** avec fine tuning
+
+
+
+## Régression logistique
+
+
+On réalise une régression logistique sans pénalisation, pour avoir un premier aperçu de la performance d'un modèle simple. La variable d'intérêt (ou le label), encodant le niveau de stress, peut prendre trois valeurs 0, 1, 2. On choisit de comparer la régression multi-classes à la méthode OneVsRest qui fixe une classe de référence et concatène les deux autres afin d'effectuer une régression binaire. Etant donné que notre variable stress est encodée selon trois niveaux, trois régressions OneVsRest sont possibles.
+
+## Résultats pour la régression logistique
+
+- Pour la régression logistique multiclasse,
+```{python}
+
+
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import ConfusionMatrixDisplay, confusion_matrix
+
+RANDOM_STATE = 42
+
+stress = pd.read_csv("data/stress.csv", sep=";")
+stress = stress.iloc[:, 1:]
+
+X = stress.drop(columns=["niveau_stress"])
+y = stress["niveau_stress"]
+X = (X - X.mean()) / X.std()
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, stratify=y, random_state=RANDOM_STATE
+)
+
+model = LogisticRegression(penalty=None, max_iter=1000, random_state=RANDOM_STATE)
+model.fit(X_train, y_train)
+
+y_pred = model.predict(X_test)
+cm = confusion_matrix(y_test, y_pred)
+
+disp = ConfusionMatrixDisplay(confusion_matrix=cm)
+disp.plot()
+plt.grid(False)
+plt.show()
+```
+
+## Résultats pour la régression logistique
+- Pour la régression OneVsRest,
+```{python}
+from sklearn.multiclass import OneVsRestClassifier
+
+model_ovr = OneVsRestClassifier(
+    LogisticRegression(penalty=None, max_iter=1000, random_state=RANDOM_STATE)
+)
+model_ovr.fit(X_train, y_train)
+
+y_pred_ovr = model_ovr.predict(X_test)
+cm_ovr = confusion_matrix(y_test, y_pred_ovr)
+
+disp = ConfusionMatrixDisplay(confusion_matrix=cm_ovr)
+disp.plot()
+plt.grid(False)
+plt.show()
+```
+
+
+## Régression Lasso
+- Les résultats de la régression logistique avec toutes les variables et sans pénalisation sont très bons. 
+- Cependant, il peut être intéressant de rechercher un modèle plus parcimonieux, n’incluant que les variables ayant la plus grande influence sur le niveau de stress. On effectue donc une régression logistique avec pénalisation l1 (Lasso), pour mettre directement les variables les moins informatives à zéro. 
+
+## Régression Lasso : résultats
+```{python}
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.multiclass import OneVsRestClassifier
+from sklearn.metrics import ConfusionMatrixDisplay, confusion_matrix
+
+RANDOM_STATE = 42
+C_l = 0.01
+
+stress = pd.read_csv("data/stress.csv", sep=";")
+stress = stress.iloc[:, 1:]
+
+X = stress.drop(columns=["niveau_stress"])
+y = stress["niveau_stress"]
+X = (X - X.mean()) / X.std()
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, stratify=y, random_state=RANDOM_STATE
+)
+
+model_lasso = OneVsRestClassifier(
+    LogisticRegression(
+        penalty="l1",
+        C=C_l,
+        max_iter=1000,
+        solver="liblinear",
+        random_state=RANDOM_STATE
+    )
+)
+
+model_lasso.fit(X_train, y_train)
+
+y_pred_lasso = model_lasso.predict(X_test)
+cm_lasso = confusion_matrix(y_test, y_pred_lasso)
+
+disp = ConfusionMatrixDisplay(confusion_matrix=cm_lasso)
+disp.plot()
+plt.grid(False)
+plt.show()
+```
+
+
+## Random Forest
+
+- Nous choisissons ensuite de tester un type de modèle différent : la forêt aléatoire, en espérant améliorer encore les performances.
+- Nous choisissons dans la suite de considérer un dataset ‘X_S’ ne conservant que les cinq premières variables par ordre d’importance données ci-dessus. Nous choisissons également de limiter la profondeur de l’arbre à 10 afin d’éviter l’overfitting, puis à 5.
+
+## Random Forest : résultats
+```{python}
+import time as tm
+import pandas as pd
+import matplotlib.pyplot as plt
+
+from sklearn.model_selection import train_test_split, RandomizedSearchCV
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import mean_absolute_percentage_error as mape
+from sklearn.metrics import root_mean_squared_error as rmse
+from scipy.stats import randint, uniform
+
+RANDOM_STATE = 42
+
+def fit_and_predict_error(model, x_train, y_train, x_test, y_test):
+    start_time = tm.time()
+    model.fit(x_train, y_train)
+    predict_train = model.predict(x_train)
+    predict_test = model.predict(x_test)
+    end_time = tm.time()
+
+    return {
+        'train': predict_train,
+        'test': predict_test,
+        'mape_train': mape(y_train, predict_train) * 100,
+        'mape_test': mape(y_test, predict_test) * 100,
+        'rmse_train': rmse(y_train, predict_train),
+        'rmse_test': rmse(y_test, predict_test),
+        'time': end_time - start_time
+    }
+
+stress = pd.read_csv("data/stress.csv", sep=";")
+stress = stress.iloc[:, 1:]
+
+X = stress.drop(columns=["niveau_stress"])
+y = stress["niveau_stress"]
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=RANDOM_STATE
+)
+
+variables_pertinentes = [
+    "reussite_academique",
+    "qualite_sommeil",
+    "relation_prof_etudiant",
+    "besoins_elementaires",
+    "estime_de_soi",
+    "problem_respiratoire"
+]
+
+X_train_S = X_train[variables_pertinentes]
+X_test_S = X_test[variables_pertinentes]
+
+rf = RandomForestRegressor(
+    n_estimators=200,
+    max_depth=10,
+    random_state=RANDOM_STATE,
+    n_jobs=-1
+)
+
+rf_result = fit_and_predict_error(rf, X_train, y_train, X_test, y_test)
+
+print(f"MAPE test : {rf_result['mape_test']:.2f}")
+print(f"RMSE test : {rf_result['rmse_test']:.3f}")
+
+df_importances_rf = pd.DataFrame({
+    "Variable": X_train.columns,
+    "Importance": rf.feature_importances_
+}).sort_values(by="Importance", ascending=False)
+
+plt.figure(figsize=(10, 6))
+plt.barh(df_importances_rf["Variable"].head(10), df_importances_rf["Importance"].head(10))
+plt.gca().invert_yaxis()
+plt.title("Top 10 des importances - Random Forest")
+plt.xlabel("Importance")
+plt.show()
+```
+
+
+## Boosting
+
+Nous testons à présent l’approche par Gradient Boosting. Il s’agit dans un premier temps de fixer les hyperparamètres. 
+ On choisit  max_depth=5 pour comparer les deux cas. On garde le nombre d’arbres/d’itérations à sa valeur par défaut n_estimators = 100. De même, on conserve learning_rate=0.1 pour limiter l’overfitting.
+
+## Boosting : résultats
+```{python}
+
+import time as tm
+import pandas as pd
+
+from sklearn.model_selection import train_test_split, RandomizedSearchCV
+from sklearn.ensemble import GradientBoostingRegressor
+from sklearn.metrics import mean_absolute_percentage_error as mape
+from sklearn.metrics import root_mean_squared_error as rmse
+from scipy.stats import randint, uniform
+
+RANDOM_STATE = 42
+
+def fit_and_predict_error(model, x_train, y_train, x_test, y_test):
+    start_time = tm.time()
+    model.fit(x_train, y_train)
+    predict_train = model.predict(x_train)
+    predict_test = model.predict(x_test)
+    end_time = tm.time()
+
+    return {
+        'train': predict_train,
+        'test': predict_test,
+        'mape_train': mape(y_train, predict_train) * 100,
+        'mape_test': mape(y_test, predict_test) * 100,
+        'rmse_train': rmse(y_train, predict_train),
+        'rmse_test': rmse(y_test, predict_test),
+        'time': end_time - start_time
+    }
+
+stress = pd.read_csv("data/stress.csv", sep=";")
+stress = stress.iloc[:, 1:]
+
+X = stress.drop(columns=["niveau_stress"])
+y = stress["niveau_stress"]
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=RANDOM_STATE
+)
+
+variables_pertinentes = [
+    "reussite_academique",
+    "qualite_sommeil",
+    "relation_prof_etudiant",
+    "besoins_elementaires",
+    "estime_de_soi",
+    "problem_respiratoire"
+]
+
+X_train_S = X_train[variables_pertinentes]
+X_test_S = X_test[variables_pertinentes]
+
+gb_s = GradientBoostingRegressor(
+    learning_rate=0.1,
+    n_estimators=100,
+    max_depth=5,
+    random_state=RANDOM_STATE
+)
+
+gb = GradientBoostingRegressor(
+    learning_rate=0.1,
+    n_estimators=100,
+    max_depth=5,
+    random_state=RANDOM_STATE
+)
+
+gb_small = fit_and_predict_error(gb_s, X_train_S, y_train, X_test_S, y_test)
+gb_all = fit_and_predict_error(gb, X_train, y_train, X_test, y_test)
+
+print("Boosting sur variables sélectionnées")
+print(f"MAPE test : {gb_small['mape_test']:.2f}")
+print(f"RMSE test : {gb_small['rmse_test']:.3f}")
+print()
+
+print("Boosting sur toutes les variables")
+print(f"MAPE test : {gb_all['mape_test']:.2f}")
+print(f"RMSE test : {gb_all['rmse_test']:.3f}")
+
+def gradient_boosting(params, X_train, X_test, y_train, y_test, s):
+    gbc = GradientBoostingRegressor(random_state=RANDOM_STATE)
+
+    random_search = RandomizedSearchCV(
+      estimator=gbc,
+      param_distributions=params,
+      n_iter=20,
+      cv=3,
+      scoring='neg_root_mean_squared_error',
+      n_jobs=1,
+      verbose=0,
+      random_state=RANDOM_STATE
+  )
+    random_search.fit(X_train, y_train)
+    best_gb = random_search.best_estimator_
+    gb_result = fit_and_predict_error(best_gb, X_train, y_train, X_test, y_test)
+
+    if s:
+        best_name = (
+            f"GB optimisé S "
+            f"(n={random_search.best_params_['n_estimators']}, "
+            f"lr={random_search.best_params_['learning_rate']:.2f})"
+        )
+    else:
+        best_name = (
+            f"GB optimisé "
+            f"(n={random_search.best_params_['n_estimators']}, "
+            f"lr={random_search.best_params_['learning_rate']:.2f})"
+        )
+
+    return best_name, gb_result
+
+param_dist = {
+    "n_estimators": randint(100, 500),
+    "learning_rate": uniform(0.01, 0.2),
+    "max_depth": randint(5, 10),
+    "subsample": uniform(0.6, 0.4)
+}
+
+best_name, gb_result = gradient_boosting(
+    param_dist, X_train, X_test, y_train, y_test, False
+)
+
+best_name_S, gb_result_S = gradient_boosting(
+    param_dist, X_train_S, X_test_S, y_train, y_test, True
+)
+
+print()
+print(best_name)
+print(f"MAPE test : {gb_result['mape_test']:.2f}")
+print(f"RMSE test : {gb_result['rmse_test']:.3f}")
+
+print()
+print(best_name_S)
+print(f"MAPE test : {gb_result_S['mape_test']:.2f}")
+print(f"RMSE test : {gb_result_S['rmse_test']:.3f}")
+
+```

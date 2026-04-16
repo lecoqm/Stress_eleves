@@ -19,19 +19,18 @@ website:
       - text: Modèles
         menu:
           - href: models/reglog.qmd
-            text: Regréssions Logistiques
+            text: Régressions logistiques
           - href: models/lasso.qmd
             text: Régression Lasso
           - href: models/random.qmd
-            text: Forêt Aléatoire
+            text: Forêt aléatoire
           - href: models/boosting.qmd
             text: Boosting
+      - href: slides.qmd
+        text: Slides
 
 format:
   html:
     theme: minty
     css: styles.css
     toc: true
-
-
-
