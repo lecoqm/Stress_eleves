@@ -6,29 +6,59 @@ on:
       - main
       - dev
   workflow_dispatch:
+  schedule:
+    - cron: "17 5 * * 1"   # chaque lundi à 05:17 UTC
 
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   publish:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v5
+      - name: Check out repository
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.ref_name }}
+
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.11"
-      - name: Install Python deps
+          cache: "pip"
+
+      - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
           pip install jupyter nbclient ipykernel -r requirements.txt
-      - name: Set up quarto
+
+      - name: Ingest latest data
+        env:
+          SOURCE_URL: ${{ secrets.SOURCE_URL }}
+        run: python scripts/ingest.py
+
+      - name: Commit updated raw data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/raw/stress_latest.parquet data/raw/metadata.json
+          git diff --cached --quiet || git commit -m "chore: update ingested data [skip ci]"
+          git push origin HEAD:${{ github.ref_name }}
+
+      - name: Recompute model outputs
+        run: python main.py
+
+      - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
-      - name: Publish to GitHub Pages (and render)
+
+      - name: Render and publish to GitHub Pages
         uses: quarto-dev/quarto-actions/publish@v2
         with:
           target: gh-pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

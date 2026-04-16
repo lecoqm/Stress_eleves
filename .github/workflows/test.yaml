@@ -29,9 +29,11 @@ jobs:
           uv sync
           uv run --with pylint pylint src --fail-under=5
 
+      - name: Test ingestion
+        run: uv run python scripts/ingest.py
+
       - name: Test that code runs smoothly
         run: uv run main.py
-
 
       - name: Upload recording.log artifact
         uses: actions/upload-artifact@v4

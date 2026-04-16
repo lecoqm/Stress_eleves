@@ -2,7 +2,7 @@ import logging
 import duckdb
 import argparse
 
-from src.config import URL_RAW
+from src.config import RAW_DATA_PATH
 from src.features import prepare_datasets
 from src.models import StressModels
 from src.evaluation import plot_roc_curves_comparison, generate_performance_table
@@ -30,7 +30,12 @@ logging.debug(f"Valeur de l'argument n_trees: {target_col}")
 
 # FEATURES ENGINEERING -----------------------------------------------------------
 
-df = con.sql(f"SELECT * FROM read_parquet('{URL_RAW}')").to_df()
+if not RAW_DATA_PATH.exists():
+    raise FileNotFoundError(
+        f"Fichier introuvable : {RAW_DATA_PATH}. "
+        "Lancez d'abord : python scripts/ingest.py"
+    )
+df = con.sql(f"SELECT * FROM read_parquet('{RAW_DATA_PATH.as_posix()}')").to_df()
 
 x_train, x_test, y_train, y_test, scaler = prepare_datasets(df, target_col)
 
