@@ -1,147 +1,165 @@
-import logging
 import pandas as pd
+from sklearn.ensemble import GradientBoostingRegressor, RandomForestRegressor
 from sklearn.linear_model import LogisticRegression, LogisticRegressionCV
-from sklearn.multiclass import OneVsRestClassifier
-from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
+from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import RandomizedSearchCV
+from sklearn.multiclass import OneVsRestClassifier
 from sklearn.tree import DecisionTreeRegressor
-from sklearn.metrics import root_mean_squared_error as rmse
-from scipy.stats import randint, uniform
 
-from src.config import RANDOM_STATE, CV_FOLDS, C_GRID_LASSO
-
-logger = logging.getLogger(__name__)
+from src.config import C_GRID_LASSO, CV_FOLDS, RANDOM_STATE
 
 
 class StressModels:
-    """
-    Classe présentant tous les modèles de régression et classification utilisés.
-    """
     def __init__(self, x_train, y_train, x_test, y_test):
         self.x_train = x_train
         self.y_train = y_train
         self.x_test = x_test
         self.y_test = y_test
-        self.results = {}
 
     def train_logistic_regression(self):
-        """
-        Entraîne les modèles Multiclasse, OneVsRest et Lasso CV.
-        Compare les coefficients et performances.
-        """
-        logger.info("Entraînement des régressions logistiques...")
-        models = {}
-        # Multiclasse
-        model_multi = LogisticRegression(l1_ratio=None, max_iter=1000, random_state=RANDOM_STATE)
-        model_multi.fit(self.x_train, self.y_train)
-        models['Multiclasse'] = model_multi
-        # OneVsRest (Référence)
-        model_ovr = OneVsRestClassifier(LogisticRegression(l1_ratio=None, max_iter=1000, random_state=RANDOM_STATE))
+        model_multinom = LogisticRegression(
+            penalty=None,
+            max_iter=1000,
+            random_state=RANDOM_STATE,
+        )
+        model_multinom.fit(self.x_train, self.y_train)
+
+        model_ovr = OneVsRestClassifier(
+            LogisticRegression(
+                penalty=None,
+                max_iter=1000,
+                random_state=RANDOM_STATE,
+            )
+        )
         model_ovr.fit(self.x_train, self.y_train)
-        models['OneVsRest'] = model_ovr
-        # Lasso avec Validation Croisée (Fine-tuning de C)
+
         model_lasso_cv = OneVsRestClassifier(
             LogisticRegressionCV(
                 Cs=C_GRID_LASSO,
-                l1_ratios=[1.0],
                 cv=CV_FOLDS,
-                solver='liblinear',
-                scoring='roc_auc',
-                max_iter=2000,
-                random_state=RANDOM_STATE)
+                penalty="l1",
+                solver="saga",
+                max_iter=5000,
+                random_state=RANDOM_STATE,
+            )
         )
         model_lasso_cv.fit(self.x_train, self.y_train)
-        models['Lasso_CV'] = model_lasso_cv
-        # Log des variables sélectionnées par Lasso
-        self._log_lasso_selection(model_lasso_cv)
 
-        return models
-
-    def _log_lasso_selection(self, model_lasso):
-        """Log les variables mises à zéro par le Lasso """
-        df_coef = pd.DataFrame(model_lasso.estimators_[0].coef_, columns=self.x_train.columns)
-        vars_non_zero = (df_coef != 0).any(axis=0)
-        return df_coef, vars_non_zero
+        return {
+            "Multiclasse": model_multinom,
+            "OneVsRest": model_ovr,
+            "Lasso_CV": model_lasso_cv,
+        }
 
     def get_top_features_from_cart(self, n_top=5):
-        """
-        Entraîne un CART simple, extrait les importances, et retourne les noms des n_top variables.
-        """
         cart = DecisionTreeRegressor(random_state=RANDOM_STATE)
         cart.fit(self.x_train, self.y_train)
-        importances = cart.feature_importances_
-        feature_names = self.x_train.columns
-        df_imp = pd.DataFrame({'feature': feature_names,
-                               'importance': importances}).sort_values(by='importance',
-                                                                       ascending=False)
 
-        top_features = df_imp['feature'].head(n_top).tolist()
-        # A commenter éventuellement après
-        print("--- Sélection automatique de variables (CART) ---")
-        print(f"Top {n_top} variables : {top_features}")
-        print(f"Importances associées : {df_imp.head(n_top)['importance'].values.round(3)}")
-        return top_features
+        df_imp = (
+            pd.DataFrame(
+                {
+                    "feature": self.x_train.columns,
+                    "importance": cart.feature_importances_,
+                }
+            )
+            .sort_values(by="importance", ascending=False)
+            .reset_index(drop=True)
+        )
 
-    def train_tree_models(self, feature_subset=None, n_top_auto=5):
-        '''
-        Args:
-        feature_subset (list): Liste explicite de variables (ex: ['var1', 'var2']).
-        n_top_auto (int): Si feature_subset est None, ce nombre de variables sera sélectionné
-        automatiquement via CART.
-        Entraîne CART, Random Forest et Gradient Boosting avec Fine-Tuning.
-        '''
+        top_features = df_imp["feature"].head(n_top).tolist()
+
+        return {
+            "feature_importances": df_imp,
+            "top_features": top_features,
+        }
+
+    def train_tree_models(self):
+        cart_results = self.get_top_features_from_cart(n_top=5)
+        top_features = cart_results["top_features"]
+
+        x_train_sel = self.x_train[top_features]
+        x_test_sel = self.x_test[top_features]
+
         results = []
-        # Sélection des variables
-        if feature_subset:
-            selected_vars = feature_subset
-        else:
-            selected_vars = self.get_top_features_from_cart(n_top_auto)
-        x_train_sub = self.x_train[selected_vars]
-        x_test_sub = self.x_test[selected_vars]
-        suffix = "_Subset" if len(selected_vars) < self.x_train.shape[1] else "_All"
-        # Random Forest avec fine-tuning
+
+        rf = RandomForestRegressor(random_state=RANDOM_STATE)
         param_dist_rf = {
-            'n_estimators': randint(50, 150),
-            'max_depth': [5, 10, 15, None],
-            'min_samples_split': randint(2, 10)
+            "n_estimators": [50, 100, 200],
+            "max_depth": [3, 5, 10, None],
+            "min_samples_split": [2, 5, 10],
         }
-        rf = RandomForestRegressor(random_state=RANDOM_STATE, oob_score=True)
-        rf_search = RandomizedSearchCV(rf, param_dist_rf, n_iter=10, cv=3,
-                                       scoring='neg_root_mean_squared_error', n_jobs=-1)
-        rf_search.fit(x_train_sub, self.y_train)
+
+        rf_search = RandomizedSearchCV(
+            rf,
+            param_distributions=param_dist_rf,
+            n_iter=10,
+            cv=3,
+            scoring="neg_root_mean_squared_error",
+            n_jobs=-1,
+            random_state=RANDOM_STATE,
+        )
+        rf_search.fit(x_train_sel, self.y_train)
+
         best_rf = rf_search.best_estimator_
-        predict_train_rf = best_rf.predict(x_train_sub)
-        predict_test_rf = best_rf.predict(x_test_sub)
-        rmse_test_rf = rmse(self.y_test, predict_test_rf)
-        rmse_train_rf = rmse(self.y_train, predict_train_rf)
-        results.append({
-            'model_name': f'RandomForest_Optimized{suffix}',
-            'model': best_rf,
-            'rmse_test': rmse_test_rf,
-            'rmse_train': rmse_train_rf,
-            'params': rf_search.best_params_,
-            'variables_used': selected_vars
-        })
-        # Gradient Boosting avec fine-tuning
-        param_dist_gb = {
-            'n_estimators': randint(50, 200),
-            'learning_rate': uniform(0.01, 0.2),
-            'max_depth': randint(3, 8)
-        }
+        rf_pred_train = best_rf.predict(x_train_sel)
+        rf_pred_test = best_rf.predict(x_test_sel)
+
+        rf_importances = (
+            pd.DataFrame(
+                {
+                    "feature": top_features,
+                    "importance": best_rf.feature_importances_,
+                }
+            )
+            .sort_values(by="importance", ascending=False)
+            .reset_index(drop=True)
+        )
+
+        results.append(
+            {
+                "model_name": "RandomForest",
+                "rmse_train": mean_squared_error(self.y_train, rf_pred_train) ** 0.5,
+                "rmse_test": mean_squared_error(self.y_test, rf_pred_test) ** 0.5,
+                "params": rf_search.best_params_,
+                "variables_used": top_features,
+            }
+        )
+
         gb = GradientBoostingRegressor(random_state=RANDOM_STATE)
-        gb_search = RandomizedSearchCV(gb, param_dist_gb, n_iter=10, cv=3, scoring='neg_root_mean_squared_error', n_jobs=-1)
-        gb_search.fit(x_train_sub, self.y_train)
+        param_dist_gb = {
+            "n_estimators": [50, 100, 200],
+            "learning_rate": [0.01, 0.05, 0.1, 0.2],
+            "max_depth": [2, 3, 4],
+        }
+
+        gb_search = RandomizedSearchCV(
+            gb,
+            param_distributions=param_dist_gb,
+            n_iter=10,
+            cv=3,
+            scoring="neg_root_mean_squared_error",
+            n_jobs=-1,
+            random_state=RANDOM_STATE,
+        )
+        gb_search.fit(x_train_sel, self.y_train)
+
         best_gb = gb_search.best_estimator_
-        predict_train_gb = best_gb.predict(x_train_sub)
-        predict_test_gb = best_gb.predict(x_test_sub)
-        rmse_test_gb = rmse(self.y_test, predict_test_gb)
-        rmse_train_gb = rmse(self.y_train, predict_train_gb)
-        results.append({
-            'model_name': f'GradientBoosting_Optimised{suffix}',
-            'model': best_gb,
-            'rmse_test': rmse_test_gb,
-            'rmse_train': rmse_train_gb,
-            'params': gb_search.best_params_,
-            'variables_used': selected_vars
-        })
-        return results
+        gb_pred_train = best_gb.predict(x_train_sel)
+        gb_pred_test = best_gb.predict(x_test_sel)
+
+        results.append(
+            {
+                "model_name": "GradientBoosting",
+                "rmse_train": mean_squared_error(self.y_train, gb_pred_train) ** 0.5,
+                "rmse_test": mean_squared_error(self.y_test, gb_pred_test) ** 0.5,
+                "params": gb_search.best_params_,
+                "variables_used": top_features,
+            }
+        )
+
+        return {
+            "cart_feature_importances": cart_results["feature_importances"],
+            "top_features": top_features,
+            "rf_feature_importances": rf_importances,
+            "tree_metrics": pd.DataFrame(results),
+        }
