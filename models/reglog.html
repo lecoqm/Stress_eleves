@@ -166,8 +166,20 @@ window.Quarto = {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#matrices-de-confusion" id="toc-matrices-de-confusion" class="nav-link active" data-scroll-target="#matrices-de-confusion">Matrices de confusion</a>
+  <ul class="collapse">
+  <li><a href="#régression-logistique-multiclasse" id="toc-régression-logistique-multiclasse" class="nav-link" data-scroll-target="#régression-logistique-multiclasse">Régression logistique multiclasse</a></li>
+  <li><a href="#régression-logistique-one-vs-rest" id="toc-régression-logistique-one-vs-rest" class="nav-link" data-scroll-target="#régression-logistique-one-vs-rest">Régression logistique One-vs-Rest</a></li>
+  <li><a href="#régression-lasso-avec-validation-croisée" id="toc-régression-lasso-avec-validation-croisée" class="nav-link" data-scroll-target="#régression-lasso-avec-validation-croisée">Régression Lasso avec validation croisée</a></li>
+  </ul></li>
+  <li><a href="#courbes-roc" id="toc-courbes-roc" class="nav-link" data-scroll-target="#courbes-roc">Courbes ROC</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -193,7 +205,7 @@ window.Quarto = {
 
 <p>On réalise une régression logistique sans pénalisation, pour avoir un premier aperçu de la performance d’un modèle simple. La variable d’intérêt (ou le label), encodant le niveau de stress, peut prendre trois valeurs 0, 1, 2. On choisit de comparer la régression multi-classes à la méthode OneVsRest qui fixe une classe de référence et concatène les deux autres afin d’effectuer une régression binaire. Etant donné que notre variable stress est encodée selon trois niveaux, trois régressions OneVsRest sont possibles.</p>
 <p>On retrouve ci-dessus les coefficients de la régression logistique multiclasse associées aux variables pour pour chacune des classes <span class="math inline">\(0, 1, 2\)</span>. Les résultats de la régression OneVsRest ci-dessous, eux correspondent aux coefficients que l’on obtient lorsque la classe <span class="math inline">\(i\in\{0,1,2\}\)</span> est prise comme référence et que les deux autres classes sont concaténées comme contrepartie. Il s’agit de coefficients dans chacun des trois cas à une régression pour un problème de classification binaire.</p>
-<div id="9381cefd" class="cell" data-execution_count="2">
+<div id="d2b6d86f" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display" data-execution_count="2">
 <div>
 
@@ -237,13 +249,13 @@ window.Quarto = {
 </div>
 </div>
 <p>En utilisant ces modèles nous pouvons donc prédire les labels correspondants. Afin de comparer les performances des différents modèles, nous nous intéressons à leur matrice de confusion, afin de visualiser la répartitions des labels, ainsi que les métriques classiques : accuracy, précision et recall. En premier pour la régression logistique multiclasse :</p>
-<div id="5563c48b" class="cell" data-execution_count="3">
+<div id="c6f5d025" class="cell" data-execution_count="3">
 <div class="cell-output cell-output-display cell-output-markdown">
 <p><strong>Meilleur modèle logistique selon l’accuracy :</strong> <code>OneVsRest</code> avec une accuracy de <strong>0.886</strong>.</p>
 </div>
 </div>
 <p>Puis pour la regréssion OneVsRest :</p>
-<div id="39792ce7" class="cell" data-execution_count="4">
+<div id="59979581" class="cell" data-execution_count="4">
 <section id="variables-les-plus-influentes-modèle-multiclasse" class="level3 cell-output cell-output-display cell-output-markdown">
 <h3 class="anchored" data-anchor-id="variables-les-plus-influentes-modèle-multiclasse">Variables les plus influentes — modèle multiclasse</h3>
 </section>
@@ -316,7 +328,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<div id="57819d3c" class="cell" data-execution_count="5">
+<div id="5d51dea4" class="cell" data-execution_count="5">
 <div class="cell-output cell-output-display" data-execution_count="5">
 <div>
 
@@ -485,7 +497,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<div id="60390cc1" class="cell" data-execution_count="6">
+<div id="54271dbf" class="cell" data-execution_count="6">
 <section id="variables-les-plus-influentes-modèle-one-vs-rest" class="level3 cell-output cell-output-display cell-output-markdown">
 <h3 class="anchored" data-anchor-id="variables-les-plus-influentes-modèle-one-vs-rest">Variables les plus influentes — modèle One-vs-Rest</h3>
 </section>
@@ -562,7 +574,7 @@ window.Quarto = {
 <p><img src="../reports/figures/roc_comparison.png" class="img-fluid"></p>
 <p>Nous observons que les deux méthodes de régressions fournissent des résultats équivalents, les courbes sont superposées, il n’y en n’a pas une très clairement au dessus de l’autre dans chacun des trois cas.</p>
 <p>Les résultats des prédictions sont pour les deux méthodes, les meilleurs s’agissant de la classe 1 et les moins bons s’agissant de la classe 0.</p>
-<div id="dedd86a0" class="cell" data-execution_count="7">
+<div id="4c1f2727" class="cell" data-execution_count="7">
 <div class="cell-output cell-output-display" data-execution_count="7">
 <div>
 
@@ -655,7 +667,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<div id="33065277" class="cell" data-execution_count="8">
+<div id="8f3f8c48" class="cell" data-execution_count="8">
 <section id="comparaison-macro-auc" class="level3 cell-output cell-output-display cell-output-markdown">
 <h3 class="anchored" data-anchor-id="comparaison-macro-auc">Comparaison macro-AUC</h3>
 </section>
@@ -697,8 +709,27 @@ window.Quarto = {
 </div>
 </div>
 </div>
+<section id="matrices-de-confusion" class="level2">
+<h2 class="anchored" data-anchor-id="matrices-de-confusion">Matrices de confusion</h2>
+<section id="régression-logistique-multiclasse" class="level3">
+<h3 class="anchored" data-anchor-id="régression-logistique-multiclasse">Régression logistique multiclasse</h3>
+<p><img src="../reports/figures/confusion_logistic_multiclass.png" class="img-fluid"></p>
+</section>
+<section id="régression-logistique-one-vs-rest" class="level3">
+<h3 class="anchored" data-anchor-id="régression-logistique-one-vs-rest">Régression logistique One-vs-Rest</h3>
+<p><img src="../reports/figures/confusion_logistic_ovr.png" class="img-fluid"></p>
+</section>
+<section id="régression-lasso-avec-validation-croisée" class="level3">
+<h3 class="anchored" data-anchor-id="régression-lasso-avec-validation-croisée">Régression Lasso avec validation croisée</h3>
+<p><img src="../reports/figures/confusion_lasso_cv.png" class="img-fluid"></p>
+</section>
+</section>
+<section id="courbes-roc" class="level2">
+<h2 class="anchored" data-anchor-id="courbes-roc">Courbes ROC</h2>
+<p><img src="../reports/figures/roc_logistic_comparison.png" class="img-fluid"></p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
