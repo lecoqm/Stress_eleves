@@ -53,7 +53,7 @@
     "href": "index.html",
     "title": "Stress des élèves dans le supérieur",
     "section": "",
-    "text": "A partir d’un jeu de données anonymisées sur le stress des élèves dans le supérieur en France et les facteurs physiques, psychologiques et de contexte scolaire et économique associés, nous mettons en oeuvre plusieurs modèles de classification et prédiction du niveau de stress (ou éventuellement d’une autre variable d’intérêt choisie par l’utilisateur au sein du jeu de données). Nous comparons ensuite les performances de chacun de ces modèles. Ces derniers sont :\n\nRégression logistique simple multiclasse et OneVsRest\nRégression Lasso avec validation croisée\nRandom Forest avec fine tuning\nBoosting avec fine tuning"
+    "text": "A partir d’un jeu de données anonymisées sur le stress des élèves dans le supérieur en France et les facteurs physiques, psychologiques et de contexte scolaire et économique associés, nous mettons en oeuvre plusieurs modèles de classification et prédiction du niveau de stress (ou éventuellement d’une autre variable d’intérêt choisie par l’utilisateur au sein du jeu de données). Nous comparons ensuite les performances de chacun de ces modèles. Ces derniers sont :\n\nRégression logistique simple multiclasse et OneVsRest\nRégression Lasso avec validation croisée\nRandom Forest avec fine tuning\nBoosting avec fine tuning\n\nSite provisoire encore en déployement."
   },
   {
     "objectID": "slides.html#présentation-du-projet",
