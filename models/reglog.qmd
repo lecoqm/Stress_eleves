@@ -54,7 +54,7 @@ coef_multiclass
 
 abs_multiclass = coef_multiclass.copy()
 for col in abs_multiclass.columns[1:]:
-    abs_multiclass[col] = abs_multiclass[col])
+    abs_multiclass[col] = abs(abs_multiclass[col])
 
 top_multiclass = (
     abs_multiclass
