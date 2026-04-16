@@ -5,6 +5,7 @@ data/*
 !data/raw/
 !data/raw/stress_latest.parquet
 !data/raw/metadata.json
+reports/
 recording.log
 .venv
 /.quarto/
