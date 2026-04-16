@@ -1,8 +1,11 @@
 FROM ubuntu:22.04
 
 # Install Python
-RUN apt-get -y update && \
-    apt-get install -y python3-pip curl
+RUN rm -rf /var/lib/apt/lists/* && \
+    apt-get clean && \
+    apt-get update --fix-missing && \
+    apt-get install -y --no-install-recommends python3-pip curl && \
+    rm -rf /var/lib/apt/lists/*
 
 # Install uv
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh
