@@ -192,149 +192,8 @@ window.Quarto = {
 
 
 <p>On réalise une régression logistique sans pénalisation, pour avoir un premier aperçu de la performance d’un modèle simple. La variable d’intérêt (ou le label), encodant le niveau de stress, peut prendre trois valeurs 0, 1, 2. On choisit de comparer la régression multi-classes à la méthode OneVsRest qui fixe une classe de référence et concatène les deux autres afin d’effectuer une régression binaire. Etant donné que notre variable stress est encodée selon trois niveaux, trois régressions OneVsRest sont possibles.</p>
-<div id="208fd1a6" class="cell" data-execution_count="1">
-<div class="cell-output cell-output-display" data-execution_count="1">
-<div>
-
-
-<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">0</th>
-<th data-quarto-table-cell-role="th">1</th>
-<th data-quarto-table-cell-role="th">2</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">niveau_anxiete</th>
-<td>-0.041761</td>
-<td>0.133522</td>
-<td>-0.091761</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">estime_de_soi</th>
-<td>0.173868</td>
-<td>0.277649</td>
-<td>-0.451517</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">historique_sante_mentale</th>
-<td>0.267869</td>
-<td>-0.378604</td>
-<td>0.110735</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">depression</th>
-<td>-0.074105</td>
-<td>-0.097787</td>
-<td>0.171893</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">maux_de_tete</th>
-<td>-0.230103</td>
-<td>-0.083287</td>
-<td>0.313390</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">tension_arterielle</th>
-<td>0.594785</td>
-<td>-4.669630</td>
-<td>4.074845</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">qualite_sommeil</th>
-<td>0.140162</td>
-<td>0.066507</td>
-<td>-0.206669</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">problem_respiratoire</th>
-<td>-0.063832</td>
-<td>-0.025545</td>
-<td>0.089377</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">niveau_bruit</th>
-<td>-0.112678</td>
-<td>-0.074914</td>
-<td>0.187592</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">conditions_vie</th>
-<td>-0.020370</td>
-<td>-0.001240</td>
-<td>0.021610</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">securite</th>
-<td>0.159834</td>
-<td>0.015134</td>
-<td>-0.174968</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">besoins_elementaires</th>
-<td>0.346028</td>
-<td>-0.261776</td>
-<td>-0.084253</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">reussite_academique</th>
-<td>0.379544</td>
-<td>-0.048368</td>
-<td>-0.331176</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">charge_travail</th>
-<td>-0.393089</td>
-<td>0.319739</td>
-<td>0.073350</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">relation_prof_etudiant</th>
-<td>0.196549</td>
-<td>-0.388200</td>
-<td>0.191651</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">perspective_insertion_professionnelle</th>
-<td>-0.026949</td>
-<td>0.086421</td>
-<td>-0.059472</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">soutien_social</th>
-<td>1.286463</td>
-<td>-1.793401</td>
-<td>0.506938</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">pression_des_paires</th>
-<td>-0.125211</td>
-<td>-0.085803</td>
-<td>0.211015</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">activites_extrascolaires</th>
-<td>-0.212472</td>
-<td>0.108206</td>
-<td>0.104267</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">harcelement</th>
-<td>-0.068059</td>
-<td>-0.162304</td>
-<td>0.230363</td>
-</tr>
-</tbody>
-</table>
-
-</div>
-</div>
-</div>
 <p>On retrouve ci-dessus les coefficients de la régression logistique multiclasse associées aux variables pour pour chacune des classes <span class="math inline">\(0, 1, 2\)</span>. Les résultats de la régression OneVsRest ci-dessous, eux correspondent aux coefficients que l’on obtient lorsque la classe <span class="math inline">\(i\in\{0,1,2\}\)</span> est prise comme référence et que les deux autres classes sont concaténées comme contrepartie. Il s’agit de coefficients dans chacun des trois cas à une régression pour un problème de classification binaire.</p>
-<div id="d7ee2b29" class="cell" data-execution_count="2">
+<div id="9381cefd" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display" data-execution_count="2">
 <div>
 
@@ -343,131 +202,33 @@ window.Quarto = {
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">0</th>
-<th data-quarto-table-cell-role="th">1</th>
-<th data-quarto-table-cell-role="th">2</th>
+<th data-quarto-table-cell-role="th">modele</th>
+<th data-quarto-table-cell-role="th">accuracy</th>
+<th data-quarto-table-cell-role="th">precision</th>
+<th data-quarto-table-cell-role="th">recall</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<th data-quarto-table-cell-role="th">niveau_anxiete</th>
-<td>-0.090310</td>
-<td>0.209257</td>
-<td>-0.110783</td>
+<th data-quarto-table-cell-role="th">0</th>
+<td>Multiclasse</td>
+<td>0.881818</td>
+<td>0.882157</td>
+<td>0.881818</td>
 </tr>
 <tr class="even">
-<th data-quarto-table-cell-role="th">estime_de_soi</th>
-<td>0.403816</td>
-<td>0.500505</td>
-<td>-0.669806</td>
+<th data-quarto-table-cell-role="th">1</th>
+<td>OneVsRest</td>
+<td>0.886364</td>
+<td>0.887026</td>
+<td>0.886364</td>
 </tr>
 <tr class="odd">
-<th data-quarto-table-cell-role="th">historique_sante_mentale</th>
-<td>0.372546</td>
-<td>-0.663183</td>
-<td>0.145243</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">depression</th>
-<td>-0.185803</td>
-<td>-0.163720</td>
-<td>0.254812</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">maux_de_tete</th>
-<td>-0.417060</td>
-<td>-0.181301</td>
-<td>0.469787</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">tension_arterielle</th>
-<td>3.529104</td>
-<td>-6.211529</td>
-<td>7.627876</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">qualite_sommeil</th>
-<td>0.276235</td>
-<td>0.065843</td>
-<td>-0.322830</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">problem_respiratoire</th>
-<td>-0.120899</td>
-<td>-0.063745</td>
-<td>0.134118</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">niveau_bruit</th>
-<td>-0.197456</td>
-<td>-0.095844</td>
-<td>0.331807</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">conditions_vie</th>
-<td>-0.035474</td>
-<td>-0.008503</td>
-<td>-0.004372</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">securite</th>
-<td>0.295659</td>
-<td>0.003343</td>
-<td>-0.229178</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">besoins_elementaires</th>
-<td>0.538521</td>
-<td>-0.586516</td>
-<td>-0.179601</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">reussite_academique</th>
-<td>0.650496</td>
-<td>-0.115621</td>
-<td>-0.492673</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">charge_travail</th>
-<td>-0.633949</td>
-<td>0.553295</td>
-<td>0.153365</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">relation_prof_etudiant</th>
-<td>0.233370</td>
-<td>-0.864417</td>
-<td>0.246481</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">perspective_insertion_professionnelle</th>
-<td>-0.076848</td>
-<td>0.151354</td>
-<td>-0.078159</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">soutien_social</th>
-<td>1.898543</td>
-<td>-3.683207</td>
-<td>0.740746</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">pression_des_paires</th>
-<td>-0.290689</td>
-<td>-0.241569</td>
-<td>0.322536</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">activites_extrascolaires</th>
-<td>-0.343130</td>
-<td>0.162133</td>
-<td>0.196598</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">harcelement</th>
-<td>-0.198705</td>
-<td>-0.452541</td>
-<td>0.337368</td>
+<th data-quarto-table-cell-role="th">2</th>
+<td>Lasso_CV</td>
+<td>0.886364</td>
+<td>0.895962</td>
+<td>0.886364</td>
 </tr>
 </tbody>
 </table>
@@ -476,32 +237,324 @@ window.Quarto = {
 </div>
 </div>
 <p>En utilisant ces modèles nous pouvons donc prédire les labels correspondants. Afin de comparer les performances des différents modèles, nous nous intéressons à leur matrice de confusion, afin de visualiser la répartitions des labels, ainsi que les métriques classiques : accuracy, précision et recall. En premier pour la régression logistique multiclasse :</p>
-<div id="61c9764f" class="cell" data-execution_count="3">
-<div class="cell-output cell-output-stdout">
-<pre><code>Accuracy : 0.877
-Precision: 0.878
-Recall   : 0.877</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="reglog_files/figure-html/cell-4-output-2.png" width="496" height="429" class="figure-img"></p>
-</figure>
-</div>
+<div id="5563c48b" class="cell" data-execution_count="3">
+<div class="cell-output cell-output-display cell-output-markdown">
+<p><strong>Meilleur modèle logistique selon l’accuracy :</strong> <code>OneVsRest</code> avec une accuracy de <strong>0.886</strong>.</p>
 </div>
 </div>
 <p>Puis pour la regréssion OneVsRest :</p>
-<div id="639182ef" class="cell" data-execution_count="4">
-<div class="cell-output cell-output-stdout">
-<pre><code>Accuracy : 0.877
-Precision: 0.878
-Recall   : 0.877</code></pre>
-</div>
-<div class="cell-output cell-output-display">
+<div id="39792ce7" class="cell" data-execution_count="4">
+<section id="variables-les-plus-influentes-modèle-multiclasse" class="level3 cell-output cell-output-display cell-output-markdown">
+<h3 class="anchored" data-anchor-id="variables-les-plus-influentes-modèle-multiclasse">Variables les plus influentes — modèle multiclasse</h3>
+</section>
+<div class="cell-output cell-output-display" data-execution_count="4">
 <div>
-<figure class="figure">
-<p><img src="reglog_files/figure-html/cell-5-output-2.png" width="496" height="429" class="figure-img"></p>
-</figure>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">variable</th>
+<th data-quarto-table-cell-role="th">max_abs_coef</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">6</th>
+<td>tension_arterielle</td>
+<td>4.933553</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">17</th>
+<td>soutien_social</td>
+<td>1.920602</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>estime_de_soi</td>
+<td>0.463810</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">15</th>
+<td>relation_prof_etudiant</td>
+<td>0.448212</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">3</th>
+<td>historique_sante_mentale</td>
+<td>0.443234</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">14</th>
+<td>charge_travail</td>
+<td>0.406961</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>column00</td>
+<td>0.394469</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">13</th>
+<td>reussite_academique</td>
+<td>0.390265</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">12</th>
+<td>besoins_elementaires</td>
+<td>0.342608</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">5</th>
+<td>maux_de_tete</td>
+<td>0.298463</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="57819d3c" class="cell" data-execution_count="5">
+<div class="cell-output cell-output-display" data-execution_count="5">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">variable</th>
+<th data-quarto-table-cell-role="th">0</th>
+<th data-quarto-table-cell-role="th">1</th>
+<th data-quarto-table-cell-role="th">2</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>column00</td>
+<td>0.297605</td>
+<td>-0.614145</td>
+<td>0.131282</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>niveau_anxiete</td>
+<td>-0.123173</td>
+<td>0.204430</td>
+<td>-0.119170</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>estime_de_soi</td>
+<td>0.399095</td>
+<td>0.556294</td>
+<td>-0.671250</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>historique_sante_mentale</td>
+<td>0.411234</td>
+<td>-0.764328</td>
+<td>0.170026</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>depression</td>
+<td>-0.201115</td>
+<td>-0.156417</td>
+<td>0.244280</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">5</th>
+<td>maux_de_tete</td>
+<td>-0.418337</td>
+<td>-0.178068</td>
+<td>0.463161</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">6</th>
+<td>tension_arterielle</td>
+<td>3.551849</td>
+<td>-6.560780</td>
+<td>7.691669</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">7</th>
+<td>qualite_sommeil</td>
+<td>0.276497</td>
+<td>0.123178</td>
+<td>-0.324324</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">8</th>
+<td>problem_respiratoire</td>
+<td>-0.134337</td>
+<td>-0.047391</td>
+<td>0.129895</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">9</th>
+<td>niveau_bruit</td>
+<td>-0.198406</td>
+<td>-0.118482</td>
+<td>0.332719</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">10</th>
+<td>conditions_vie</td>
+<td>-0.029441</td>
+<td>0.018688</td>
+<td>0.002337</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">11</th>
+<td>securite</td>
+<td>0.303545</td>
+<td>-0.036142</td>
+<td>-0.231550</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">12</th>
+<td>besoins_elementaires</td>
+<td>0.527378</td>
+<td>-0.560951</td>
+<td>-0.185329</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">13</th>
+<td>reussite_academique</td>
+<td>0.660362</td>
+<td>-0.157042</td>
+<td>-0.489219</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">14</th>
+<td>charge_travail</td>
+<td>-0.632076</td>
+<td>0.609399</td>
+<td>0.159371</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">15</th>
+<td>relation_prof_etudiant</td>
+<td>0.247410</td>
+<td>-0.967905</td>
+<td>0.250030</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">16</th>
+<td>perspective_insertion_professionnelle</td>
+<td>-0.050372</td>
+<td>0.124676</td>
+<td>-0.059830</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">17</th>
+<td>soutien_social</td>
+<td>1.914309</td>
+<td>-3.908748</td>
+<td>0.744374</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">18</th>
+<td>pression_des_paires</td>
+<td>-0.322705</td>
+<td>-0.138926</td>
+<td>0.310624</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">19</th>
+<td>activites_extrascolaires</td>
+<td>-0.374013</td>
+<td>0.156293</td>
+<td>0.195306</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">20</th>
+<td>harcelement</td>
+<td>-0.193018</td>
+<td>-0.445681</td>
+<td>0.332073</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="60390cc1" class="cell" data-execution_count="6">
+<section id="variables-les-plus-influentes-modèle-one-vs-rest" class="level3 cell-output cell-output-display cell-output-markdown">
+<h3 class="anchored" data-anchor-id="variables-les-plus-influentes-modèle-one-vs-rest">Variables les plus influentes — modèle One-vs-Rest</h3>
+</section>
+<div class="cell-output cell-output-display" data-execution_count="6">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">variable</th>
+<th data-quarto-table-cell-role="th">max_abs_coef</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">6</th>
+<td>tension_arterielle</td>
+<td>7.691669</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">17</th>
+<td>soutien_social</td>
+<td>3.908748</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">15</th>
+<td>relation_prof_etudiant</td>
+<td>0.967905</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>historique_sante_mentale</td>
+<td>0.764328</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>estime_de_soi</td>
+<td>0.671250</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">13</th>
+<td>reussite_academique</td>
+<td>0.660362</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">14</th>
+<td>charge_travail</td>
+<td>0.632076</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">0</th>
+<td>column00</td>
+<td>0.614145</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">12</th>
+<td>besoins_elementaires</td>
+<td>0.560951</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">5</th>
+<td>maux_de_tete</td>
+<td>0.463161</td>
+</tr>
+</tbody>
+</table>
+
 </div>
 </div>
 </div>
@@ -509,6 +562,141 @@ Recall   : 0.877</code></pre>
 <p><img src="../reports/figures/roc_comparison.png" class="img-fluid"></p>
 <p>Nous observons que les deux méthodes de régressions fournissent des résultats équivalents, les courbes sont superposées, il n’y en n’a pas une très clairement au dessus de l’autre dans chacun des trois cas.</p>
 <p>Les résultats des prédictions sont pour les deux méthodes, les meilleurs s’agissant de la classe 1 et les moins bons s’agissant de la classe 0.</p>
+<div id="dedd86a0" class="cell" data-execution_count="7">
+<div class="cell-output cell-output-display" data-execution_count="7">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">modele</th>
+<th data-quarto-table-cell-role="th">classe</th>
+<th data-quarto-table-cell-role="th">auc</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>Multiclasse</td>
+<td>0</td>
+<td>0.976860</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>Multiclasse</td>
+<td>1</td>
+<td>0.983296</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>Multiclasse</td>
+<td>2</td>
+<td>0.987134</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>Multiclasse</td>
+<td>macro</td>
+<td>0.982398</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>OneVsRest</td>
+<td>0</td>
+<td>0.977786</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">5</th>
+<td>OneVsRest</td>
+<td>1</td>
+<td>0.978697</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">6</th>
+<td>OneVsRest</td>
+<td>2</td>
+<td>0.986394</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">7</th>
+<td>OneVsRest</td>
+<td>macro</td>
+<td>0.980856</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">8</th>
+<td>Lasso_CV</td>
+<td>0</td>
+<td>0.952703</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">9</th>
+<td>Lasso_CV</td>
+<td>1</td>
+<td>0.933089</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">10</th>
+<td>Lasso_CV</td>
+<td>2</td>
+<td>0.979267</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">11</th>
+<td>Lasso_CV</td>
+<td>macro</td>
+<td>0.955013</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="33065277" class="cell" data-execution_count="8">
+<section id="comparaison-macro-auc" class="level3 cell-output cell-output-display cell-output-markdown">
+<h3 class="anchored" data-anchor-id="comparaison-macro-auc">Comparaison macro-AUC</h3>
+</section>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">modele</th>
+<th data-quarto-table-cell-role="th">classe</th>
+<th data-quarto-table-cell-role="th">auc</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>Multiclasse</td>
+<td>macro</td>
+<td>0.982398</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>OneVsRest</td>
+<td>macro</td>
+<td>0.980856</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>Lasso_CV</td>
+<td>macro</td>
+<td>0.955013</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
 
 
 
