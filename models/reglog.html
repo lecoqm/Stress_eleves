@@ -192,7 +192,7 @@ window.Quarto = {
 
 
 <p>On réalise une régression logistique sans pénalisation, pour avoir un premier aperçu de la performance d’un modèle simple. La variable d’intérêt (ou le label), encodant le niveau de stress, peut prendre trois valeurs 0, 1, 2. On choisit de comparer la régression multi-classes à la méthode OneVsRest qui fixe une classe de référence et concatène les deux autres afin d’effectuer une régression binaire. Etant donné que notre variable stress est encodée selon trois niveaux, trois régressions OneVsRest sont possibles.</p>
-<div id="d0dc0349" class="cell" data-execution_count="1">
+<div id="208fd1a6" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display" data-execution_count="1">
 <div>
 
@@ -334,7 +334,7 @@ window.Quarto = {
 </div>
 </div>
 <p>On retrouve ci-dessus les coefficients de la régression logistique multiclasse associées aux variables pour pour chacune des classes <span class="math inline">\(0, 1, 2\)</span>. Les résultats de la régression OneVsRest ci-dessous, eux correspondent aux coefficients que l’on obtient lorsque la classe <span class="math inline">\(i\in\{0,1,2\}\)</span> est prise comme référence et que les deux autres classes sont concaténées comme contrepartie. Il s’agit de coefficients dans chacun des trois cas à une régression pour un problème de classification binaire.</p>
-<div id="bfc9c787" class="cell" data-execution_count="2">
+<div id="d7ee2b29" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display" data-execution_count="2">
 <div>
 
@@ -476,7 +476,7 @@ window.Quarto = {
 </div>
 </div>
 <p>En utilisant ces modèles nous pouvons donc prédire les labels correspondants. Afin de comparer les performances des différents modèles, nous nous intéressons à leur matrice de confusion, afin de visualiser la répartitions des labels, ainsi que les métriques classiques : accuracy, précision et recall. En premier pour la régression logistique multiclasse :</p>
-<div id="50f33af6" class="cell" data-execution_count="3">
+<div id="61c9764f" class="cell" data-execution_count="3">
 <div class="cell-output cell-output-stdout">
 <pre><code>Accuracy : 0.877
 Precision: 0.878
@@ -491,7 +491,7 @@ Recall   : 0.877</code></pre>
 </div>
 </div>
 <p>Puis pour la regréssion OneVsRest :</p>
-<div id="88643d24" class="cell" data-execution_count="4">
+<div id="639182ef" class="cell" data-execution_count="4">
 <div class="cell-output cell-output-stdout">
 <pre><code>Accuracy : 0.877
 Precision: 0.878
