@@ -12,128 +12,81 @@ On réalise une régression logistique sans pénalisation, pour avoir un premier
 
 
 ```{python}
+from pathlib import Path
 import pandas as pd
-import matplotlib.pyplot as plt
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LogisticRegression
-from sklearn.multiclass import OneVsRestClassifier
-from sklearn.metrics import ConfusionMatrixDisplay, confusion_matrix, precision_score, recall_score
-RANDOM_STATE = 42
+from IPython.display import Markdown, display
 
-file_name="../data/stress.csv"
-stress=pd.read_csv(file_name, sep=';')
-stress=stress.iloc[:,1:]
+BASE_DIR = Path("..")
+TABLES_DIR = BASE_DIR / "reports" / "tables"
+FIGURES_DIR = BASE_DIR / "reports" / "figures"
 
-X, y = stress.drop(['niveau_stress'], axis=1), stress['niveau_stress']
-X=(X-X.mean())/X.std()
+logistic_metrics = pd.read_csv(TABLES_DIR / "logistic_metrics.csv")
+coef_multiclass = pd.read_csv(TABLES_DIR / "logistic_multiclass_coefficients.csv")
+coef_ovr = pd.read_csv(TABLES_DIR / "logistic_ovr_coefficients.csv")
+roc_summary = pd.read_csv(TABLES_DIR / "roc_logistic_summary.csv")
 
-# Préparation des sets d'entraînement et de test
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, stratify=y, random_state=RANDOM_STATE)
-
-
-# Modèles
-model_multinom=LogisticRegression(penalty=None, max_iter=1000, random_state=RANDOM_STATE)
-model_multinom.fit(X_train, y_train)
-
-
-
-def df_coef(model):
-    if hasattr(model, 'estimators_'): # Pour gérer le modèle OneVsRest, qui induit un modèle par classe
-        
-        feature_names = model.feature_names_in_
-        classes = model.classes_
-        
-        data = []
-        class_labels = []
-        
-        for i, estimator in enumerate(model.estimators_):
-            coef = estimator.coef_[0] 
-            data.append(coef)
-            class_labels.append(classes[i])
-            
-        df = pd.DataFrame(
-            data,
-            columns=feature_names,
-            index=class_labels
-        )
-        return df
-    
-    return pd.DataFrame(
-    model.coef_,
-    columns=model.feature_names_in_,
-    index=model.classes_
-)
-
-
-coef_multiclass = df_coef(model_multinom)
-coef_multiclass.T
+coef_multiclass = coef_multiclass.rename(columns={coef_multiclass.columns[0]: "variable"})
+coef_ovr = coef_ovr.rename(columns={coef_ovr.columns[0]: "variable"})
 
 ```
 
 On retrouve ci-dessus les coefficients de la régression logistique multiclasse associées aux variables pour pour chacune des classes $0, 1, 2$. Les résultats de la régression OneVsRest ci-dessous, eux correspondent aux coefficients que l'on obtient lorsque la classe $i\in\{0,1,2\}$ est prise comme référence et que les deux autres classes sont concaténées comme contrepartie. Il s'agit de coefficients dans chacun des trois cas à une régression pour un problème de classification binaire.
 
 ```{python}
-model_ovr=OneVsRestClassifier(LogisticRegression(penalty=None, max_iter=1000, random_state=RANDOM_STATE))
-model_ovr.fit(X_train, y_train)
-coef_ovr = df_coef(model_ovr)
-coef_ovr.T
+logistic_metrics
 ```
 
 
 En utilisant ces modèles nous pouvons donc prédire les labels correspondants. Afin de comparer les performances des différents modèles, nous nous intéressons à leur matrice de confusion, afin de visualiser la répartitions des labels, ainsi que les métriques classiques : accuracy, précision et recall. En premier pour la régression logistique multiclasse :
 
 ```{python}
-def evaluate_classifier(model, X_test, y_test, average="weighted", show_confusion=True):
-    """
-    Évalue un modèle de classification sklearn (binaire ou multiclasses).
-    Retourne un dictionnaire contenant : la prédiction de la classe, la prediction de la probabilité P(Y=1|X), l'accuracy, la précision et le recall.
-    Si show_confusion=True : affiche la matrice de confusion.
-    """
-
-    y_pred = model.predict(X_test)
-    y_pred_proba = None
-    if hasattr(model, "predict_proba"):
-        y_pred_proba = model.predict_proba(X_test)
-
-    # Métriques
-    accuracy = model.score(X_test, y_test)
-    precision = precision_score(y_test, y_pred, average=average)
-    recall = recall_score(y_test, y_pred, average=average)
-
-    print(f"Accuracy : {accuracy:.3f}")
-    print(f"Precision: {precision:.3f}")
-    print(f"Recall   : {recall:.3f}")
-
-    # Matrice de confusion
-    if show_confusion:
-        labels = model.classes_ if hasattr(model, "classes_") else None
-        cm = confusion_matrix(y_test, y_pred, labels=labels)
-
-        disp = ConfusionMatrixDisplay(
-            confusion_matrix=cm,
-            display_labels=labels
-        )
-        disp.plot()
-        plt.grid(False)
-        plt.show()
-
-    return {
-        "y_pred": y_pred,
-        "y_pred_proba": y_pred_proba,
-        "accuracy": accuracy,
-        "precision": precision,
-        "recall": recall,
-        "confusion_matrix": cm if show_confusion else None
-    }
-
-evaluate_multinom = evaluate_classifier(model_multinom, X_test, y_test, "weighted", True)
+best_model = logistic_metrics.sort_values("accuracy", ascending=False).iloc[0]
+display(Markdown(
+    f"**Meilleur modèle logistique selon l'accuracy :** "
+    f"`{best_model['modele']}` avec une accuracy de **{best_model['accuracy']:.3f}**."
+))
 ```
 
 Puis pour la regréssion OneVsRest :
 
 ```{python}
+coef_multiclass
 
-evaluate_ovr = evaluate_classifier(model_ovr, X_test, y_test, "weighted", True)
+abs_multiclass = coef_multiclass.copy()
+for col in abs_multiclass.columns[1:]:
+    abs_multiclass[col] = abs_multiclass[col])
+
+top_multiclass = (
+    abs_multiclass
+    .assign(max_abs_coef=abs_multiclass.iloc[:, 1:].max(axis=1))
+    .sort_values("max_abs_coef", ascending=False)
+    .loc[:, ["variable", "max_abs_coef"]]
+    .head(10)
+)
+
+display(Markdown("### Variables les plus influentes — modèle multiclasse"))
+top_multiclass
+```
+
+```{python}
+coef_ovr
+```
+
+```{python}
+abs_ovr = coef_ovr.copy()
+for col in abs_ovr.columns[1:]:
+    abs_ovr[col] = abs(abs_ovr[col])
+
+top_ovr = (
+    abs_ovr
+    .assign(max_abs_coef=abs_ovr.iloc[:, 1:].max(axis=1))
+    .sort_values("max_abs_coef", ascending=False)
+    .loc[:, ["variable", "max_abs_coef"]]
+    .head(10)
+)
+
+display(Markdown("### Variables les plus influentes — modèle One-vs-Rest"))
+top_ovr
 ```
 
 Afin d'afiner la comparaison des modèles, nous traçons les différentes aux courbes ROC des régressions, méthode par méthode.
@@ -143,3 +96,18 @@ Afin d'afiner la comparaison des modèles, nous traçons les différentes aux co
 Nous observons que les deux méthodes de régressions fournissent des résultats équivalents, les courbes sont superposées, il n'y en n'a pas une très clairement au dessus de l'autre dans chacun des trois cas.
 
 Les résultats des prédictions sont pour les deux méthodes, les meilleurs s'agissant de la classe 1 et les moins bons s'agissant de la classe 0.
+
+```{python}
+roc_summary
+```
+
+```{python}
+roc_macro = (
+    roc_summary[roc_summary["classe"].astype(str) == "macro"]
+    .sort_values("auc", ascending=False)
+    .reset_index(drop=True)
+)
+
+display(Markdown("### Comparaison macro-AUC"))
+roc_macro
+```
