@@ -205,7 +205,7 @@ window.Quarto = {
 
 <p>On réalise une régression logistique sans pénalisation, pour avoir un premier aperçu de la performance d’un modèle simple. La variable d’intérêt (ou le label), encodant le niveau de stress, peut prendre trois valeurs 0, 1, 2. On choisit de comparer la régression multi-classes à la méthode OneVsRest qui fixe une classe de référence et concatène les deux autres afin d’effectuer une régression binaire. Etant donné que notre variable stress est encodée selon trois niveaux, trois régressions OneVsRest sont possibles.</p>
 <p>On retrouve ci-dessus les coefficients de la régression logistique multiclasse associées aux variables pour pour chacune des classes <span class="math inline">\(0, 1, 2\)</span>. Les résultats de la régression OneVsRest ci-dessous, eux correspondent aux coefficients que l’on obtient lorsque la classe <span class="math inline">\(i\in\{0,1,2\}\)</span> est prise comme référence et que les deux autres classes sont concaténées comme contrepartie. Il s’agit de coefficients dans chacun des trois cas à une régression pour un problème de classification binaire.</p>
-<div id="7e61008f" class="cell" data-execution_count="2">
+<div id="4f975ab8" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display" data-execution_count="2">
 <div>
 
@@ -249,13 +249,13 @@ window.Quarto = {
 </div>
 </div>
 <p>En utilisant ces modèles nous pouvons donc prédire les labels correspondants. Afin de comparer les performances des différents modèles, nous nous intéressons à leur matrice de confusion, afin de visualiser la répartitions des labels, ainsi que les métriques classiques : accuracy, précision et recall. En premier pour la régression logistique multiclasse :</p>
-<div id="821b678c" class="cell" data-execution_count="3">
+<div id="183add63" class="cell" data-execution_count="3">
 <div class="cell-output cell-output-display cell-output-markdown">
 <p><strong>Meilleur modèle logistique selon l’accuracy :</strong> <code>OneVsRest</code> avec une accuracy de <strong>0.886</strong>.</p>
 </div>
 </div>
 <p>Puis pour la regréssion OneVsRest :</p>
-<div id="1d81cdde" class="cell" data-execution_count="4">
+<div id="d751ba50" class="cell" data-execution_count="4">
 <section id="variables-les-plus-influentes-modèle-multiclasse" class="level3 cell-output cell-output-display cell-output-markdown">
 <h3 class="anchored" data-anchor-id="variables-les-plus-influentes-modèle-multiclasse">Variables les plus influentes — modèle multiclasse</h3>
 </section>
@@ -328,7 +328,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<div id="db60011f" class="cell" data-execution_count="5">
+<div id="0aee005a" class="cell" data-execution_count="5">
 <div class="cell-output cell-output-display" data-execution_count="5">
 <div>
 
@@ -497,7 +497,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<div id="1a101f6a" class="cell" data-execution_count="6">
+<div id="ffdf47d3" class="cell" data-execution_count="6">
 <section id="variables-les-plus-influentes-modèle-one-vs-rest" class="level3 cell-output cell-output-display cell-output-markdown">
 <h3 class="anchored" data-anchor-id="variables-les-plus-influentes-modèle-one-vs-rest">Variables les plus influentes — modèle One-vs-Rest</h3>
 </section>
@@ -574,7 +574,7 @@ window.Quarto = {
 <p><img src="../reports/figures/roc_comparison.png" class="img-fluid"></p>
 <p>Nous observons que les deux méthodes de régressions fournissent des résultats équivalents, les courbes sont superposées, il n’y en n’a pas une très clairement au dessus de l’autre dans chacun des trois cas.</p>
 <p>Les résultats des prédictions sont pour les deux méthodes, les meilleurs s’agissant de la classe 1 et les moins bons s’agissant de la classe 0.</p>
-<div id="0233b32e" class="cell" data-execution_count="7">
+<div id="53bbbaac" class="cell" data-execution_count="7">
 <div class="cell-output cell-output-display" data-execution_count="7">
 <div>
 
@@ -667,7 +667,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<div id="53560861" class="cell" data-execution_count="8">
+<div id="fa55abdc" class="cell" data-execution_count="8">
 <section id="comparaison-macro-auc" class="level3 cell-output cell-output-display cell-output-markdown">
 <h3 class="anchored" data-anchor-id="comparaison-macro-auc">Comparaison macro-AUC</h3>
 </section>
