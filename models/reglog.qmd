@@ -111,3 +111,21 @@ roc_macro = (
 display(Markdown("### Comparaison macro-AUC"))
 roc_macro
 ```
+
+## Matrices de confusion
+
+### Régression logistique multiclasse
+
+![](../reports/figures/confusion_logistic_multiclass.png)
+
+### Régression logistique One-vs-Rest
+
+![](../reports/figures/confusion_logistic_ovr.png)
+
+### Régression Lasso avec validation croisée
+
+![](../reports/figures/confusion_lasso_cv.png)
+
+## Courbes ROC
+
+![](../reports/figures/roc_logistic_comparison.png)
