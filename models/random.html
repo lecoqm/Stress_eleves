@@ -193,7 +193,7 @@ window.Quarto = {
 
 <p>Nous choisissons ensuite de tester un type de modèle différent : la forêt aléatoire, en espérant améliorer encore les performances.</p>
 <p>Pour rappel, avec le modèle de régression Lasso, on avait en regroupant les résultats des trois régressions possibles :</p>
-<div id="54988100" class="cell" data-execution_count="2">
+<div id="0cb414d7" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display" data-execution_count="2">
 <div>
 
@@ -322,50 +322,10 @@ window.Quarto = {
 </div>
 <p>En entrainant une forêt aléatoire, les <em>features</em> les plus importances sont les suivantes.</p>
 <p><img src="../reports/figures/random_forest_feature_importance.png" class="img-fluid"></p>
-<p>Nous observons quelques divergences : ici la variable relative aux problèmes respiratoires est la 5e plus importante, tandis qu’elle n’était pas sélectionnée par la régression Lasso. Les activités extrascolaires et la tension artérielle ont un niveau d’importance inférieur selon l’arbre de classification, tandis qu’elles étaient toutes deux sélectionnées par la régression Lasso.</p>
 <p>Nous choisissons dans la suite de considérer un dataset ‘X_S’ ne conservant que les cinq premières variables par ordre d’importance données ci-dessus. Nous choisissons également de limiter la profondeur de l’arbre à 10 afin d’éviter l’overfitting, puis à 5. En partant de cet arbre, nous passons à une forêt aléatoire.</p>
-<div id="794e41d6" class="cell" data-execution_count="3">
-<div class="cell-output cell-output-display" data-execution_count="3">
-<div>
-
-
-<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">model_name</th>
-<th data-quarto-table-cell-role="th">rmse_train</th>
-<th data-quarto-table-cell-role="th">rmse_test</th>
-<th data-quarto-table-cell-role="th">parametres</th>
-<th data-quarto-table-cell-role="th">variables_utilisees</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">0</th>
-<td>RandomForest</td>
-<td>0.320938</td>
-<td>0.427311</td>
-<td>{'n_estimators': 200, 'min_samples_split': 10,...</td>
-<td>reussite_academique, qualite_sommeil, relation...</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">1</th>
-<td>GradientBoosting</td>
-<td>0.303186</td>
-<td>0.434848</td>
-<td>{'n_estimators': 50, 'max_depth': 3, 'learning...</td>
-<td>reussite_academique, qualite_sommeil, relation...</td>
-</tr>
-</tbody>
-</table>
-
-</div>
-</div>
-</div>
 <p>L’erreur est minimale pour <span class="math inline">\(5\leq n\leq10\)</span> arbres dans la forêt. Seulement, cette dernière varie en fait très fortement jusqu’à <span class="math inline">\(n \simeq 20-25\)</span>. Nous évaluons donc le modèle pour deux forêts de <span class="math inline">\(n=25\)</span> et <span class="math inline">\(n=60\)</span> arbres respectivement. Dans le dernier cas, on choisit un nombre d’arbres suffisamment important pour être certains d’être dans une zone où l’erreur s’est stabilisée autour d’une valeur minimale (<span class="math inline">\(0.4\)</span> environ). On diminue également le nombre d’arbres fixé par défaut à <span class="math inline">\(100\)</span>. Cependant, pour les mêmes arguments, on aurait aussi bien pu prendre comme comparaison de <span class="math inline">\(25\)</span>, <span class="math inline">\(n=40\)</span> ou <span class="math inline">\(50\)</span> arbres.</p>
-<div id="51a807a4" class="cell" data-execution_count="4">
-<div class="cell-output cell-output-display" data-execution_count="4">
+<div id="51f76cce" class="cell" data-execution_count="3">
+<div class="cell-output cell-output-display" data-execution_count="3">
 <div>
 
 

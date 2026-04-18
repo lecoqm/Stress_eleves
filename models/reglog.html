@@ -204,7 +204,7 @@ window.Quarto = {
 
 <p>On réalise une régression logistique sans pénalisation, pour avoir un premier aperçu de la performance d’un modèle simple. La variable d’intérêt (ou le label), encodant le niveau de stress, peut prendre trois valeurs 0, 1, 2. On choisit de comparer la régression multi-classes à la méthode OneVsRest qui fixe une classe de référence et concatène les deux autres afin d’effectuer une régression binaire. Etant donné que notre variable stress est encodée selon trois niveaux, trois régressions OneVsRest sont possibles.</p>
 <p>On retrouve ci-dessus les coefficients de la régression logistique multiclasse associées aux variables pour pour chacune des classes <span class="math inline">\(0, 1, 2\)</span>. Les résultats de la régression OneVsRest ci-dessous, eux correspondent aux coefficients que l’on obtient lorsque la classe <span class="math inline">\(i\in\{0,1,2\}\)</span> est prise comme référence et que les deux autres classes sont concaténées comme contrepartie. Il s’agit de coefficients dans chacun des trois cas à une régression pour un problème de classification binaire.</p>
-<div id="553bf461" class="cell" data-execution_count="2">
+<div id="d79b37e3" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display" data-execution_count="2">
 <div>
 
@@ -247,7 +247,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<div id="82b93724" class="cell" data-execution_count="3">
+<div id="3cf3233d" class="cell" data-execution_count="3">
 <section id="variables-les-plus-influentes-modèle-multiclasse" class="level3 cell-output cell-output-display cell-output-markdown">
 <h3 class="anchored" data-anchor-id="variables-les-plus-influentes-modèle-multiclasse">Variables les plus influentes — modèle multiclasse</h3>
 </section>
@@ -323,7 +323,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<div id="72a63f07" class="cell" data-execution_count="4">
+<div id="605c948e" class="cell" data-execution_count="4">
 <div class="cell-output cell-output-display" data-execution_count="4">
 <div>
 
@@ -492,7 +492,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<div id="0a990206" class="cell" data-execution_count="5">
+<div id="c2d44d37" class="cell" data-execution_count="5">
 <section id="variables-les-plus-influentes-modèle-one-vs-rest" class="level3 cell-output cell-output-display cell-output-markdown">
 <h3 class="anchored" data-anchor-id="variables-les-plus-influentes-modèle-one-vs-rest">Variables les plus influentes — modèle One-vs-Rest</h3>
 </section>
@@ -569,7 +569,7 @@ window.Quarto = {
 </div>
 </div>
 <p>En utilisant ces modèles nous pouvons donc prédire les labels correspondants. Afin de comparer les performances des différents modèles, nous nous intéressons à leur matrice de confusion, afin de visualiser la répartitions des labels, ainsi que les métriques classiques : accuracy, précision et recall.</p>
-<div id="40dfdcb8" class="cell" data-execution_count="6">
+<div id="16bb0558" class="cell" data-execution_count="6">
 <div class="cell-output cell-output-display cell-output-markdown">
 <p><strong>Meilleur modèle logistique selon l’accuracy :</strong> <code>OneVsRest</code> avec une accuracy de <strong>0.886</strong>.</p>
 </div>
@@ -583,7 +583,7 @@ window.Quarto = {
 <section id="régression-logistique-one-vs-rest" class="level3">
 <h3 class="anchored" data-anchor-id="régression-logistique-one-vs-rest">Régression logistique One-vs-Rest</h3>
 <p><img src="../reports/figures/confusion_logistic_ovr.png" class="img-fluid"></p>
-<div id="6cfff6f2" class="cell" data-execution_count="7">
+<div id="442905d1" class="cell" data-execution_count="7">
 <div class="cell-output cell-output-display" data-execution_count="7">
 <div>
 
@@ -677,7 +677,7 @@ window.Quarto = {
 </div>
 </div>
 </section>
-<div id="5cb87199" class="cell" data-execution_count="8">
+<div id="b4f785f4" class="cell" data-execution_count="8">
 <section id="comparaison-macro-auc" class="level3 cell-output cell-output-display cell-output-markdown">
 <h3 class="anchored" data-anchor-id="comparaison-macro-auc">Comparaison macro-AUC</h3>
 </section>
