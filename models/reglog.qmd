@@ -37,18 +37,6 @@ logistic_metrics
 ```
 
 
-En utilisant ces modèles nous pouvons donc prédire les labels correspondants. Afin de comparer les performances des différents modèles, nous nous intéressons à leur matrice de confusion, afin de visualiser la répartitions des labels, ainsi que les métriques classiques : accuracy, précision et recall. En premier pour la régression logistique multiclasse :
-
-```{python}
-best_model = logistic_metrics.sort_values("accuracy", ascending=False).iloc[0]
-display(Markdown(
-    f"**Meilleur modèle logistique selon l'accuracy :** "
-    f"`{best_model['modele']}` avec une accuracy de **{best_model['accuracy']:.3f}**."
-))
-```
-
-Puis pour la regréssion OneVsRest :
-
 ```{python}
 coef_multiclass
 
@@ -65,6 +53,7 @@ top_multiclass = (
 )
 
 display(Markdown("### Variables les plus influentes — modèle multiclasse"))
+display(Markdown("Nous pouvons également repérer les variables les plus influentes"))
 top_multiclass
 ```
 
@@ -86,16 +75,31 @@ top_ovr = (
 )
 
 display(Markdown("### Variables les plus influentes — modèle One-vs-Rest"))
+display(Markdown("Nous pouvons également repérer les variables les plus influentes"))
 top_ovr
 ```
 
-Afin d'afiner la comparaison des modèles, nous traçons les différentes aux courbes ROC des régressions, méthode par méthode.
+En utilisant ces modèles nous pouvons donc prédire les labels correspondants. Afin de comparer les performances des différents modèles, nous nous intéressons à leur matrice de confusion, afin de visualiser la répartitions des labels, ainsi que les métriques classiques : accuracy, précision et recall.
 
-![](/reports/figures/roc_comparison.png)
+```{python}
+best_model = logistic_metrics.sort_values("accuracy", ascending=False).iloc[0]
+display(Markdown(
+    f"**Meilleur modèle logistique selon l'accuracy :** "
+    f"`{best_model['modele']}` avec une accuracy de **{best_model['accuracy']:.3f}**."
+))
+```
 
-Nous observons que les deux méthodes de régressions fournissent des résultats équivalents, les courbes sont superposées, il n'y en n'a pas une très clairement au dessus de l'autre dans chacun des trois cas.
 
-Les résultats des prédictions sont pour les deux méthodes, les meilleurs s'agissant de la classe 1 et les moins bons s'agissant de la classe 0.
+## Matrices de confusion
+
+### Régression logistique multiclasse
+
+![](../reports/figures/confusion_logistic_multiclass.png)
+
+### Régression logistique One-vs-Rest
+
+![](../reports/figures/confusion_logistic_ovr.png)
+
 
 ```{python}
 roc_summary
@@ -112,20 +116,12 @@ display(Markdown("### Comparaison macro-AUC"))
 roc_macro
 ```
 
-## Matrices de confusion
 
-### Régression logistique multiclasse
-
-![](../reports/figures/confusion_logistic_multiclass.png)
-
-### Régression logistique One-vs-Rest
-
-![](../reports/figures/confusion_logistic_ovr.png)
-
-### Régression Lasso avec validation croisée
-
-![](../reports/figures/confusion_lasso_cv.png)
 
 ## Courbes ROC
+Afin d'afiner la comparaison des modèles, nous traçons les différentes aux courbes ROC des régressions, méthode par méthode.
 
+Nous observons que les deux méthodes de régressions fournissent des résultats équivalents, les courbes sont superposées, il n'y en n'a pas une très clairement au dessus de l'autre dans chacun des trois cas.
+
+Les résultats des prédictions sont pour les deux méthodes, les meilleurs s'agissant de la classe 1 et les moins bons s'agissant de la classe 0.
 ![](../reports/figures/roc_logistic_comparison.png)

@@ -7,34 +7,49 @@ execute:
   message: false
 ---
 
+```{python}
+from pathlib import Path
+import pandas as pd
+from IPython.display import Markdown, display
+
+BASE_DIR = Path("..")
+TABLES_DIR = BASE_DIR / "reports" / "tables"
+FIGURES_DIR = BASE_DIR / "reports" / "figures"
+
+performance_random_forest = pd.read_csv(TABLES_DIR / "performance_random_forest.csv")
+performance_trees = pd.read_csv(TABLES_DIR / "performance_trees.csv")
+random_forest_feature_importance = pd.read_csv(TABLES_DIR / "random_forest_feature_importance.csv")
+tree_model_comparison = pd.read_csv(TABLES_DIR / "roc_logistic_summary.csv")
+lasso_selected_variables = pd.read_csv(TABLES_DIR / "lasso_selected_variables.csv")
+
+
+```
 
 Nous choisissons ensuite de tester un type de modèle différent : la forêt aléatoire, en espérant améliorer encore les performances.
 
 Pour rappel, avec le modèle de régression Lasso, on avait en regroupant les résultats des trois régressions possibles : 
+```{python}
+lasso_selected_variables
+```
 
-Variables sélectionnées :  Index(['niveau_anxiete', 'estime_de_soi', 'depression', 'maux_de_tete',
-       'tension_arterielle', 'qualite_sommeil', 'securite',
-       'besoins_elementaires', 'reussite_academique', 'relation_prof_etudiant',
-       'perspective_insertion_professionnelle', 'pression_des_paires',
-       'activites_extrascolaires', 'harcelement'],
-      dtype='object')
+En entrainant une forêt aléatoire, les *features* les plus importances sont les suivantes.
 
-Variables mises de côte :  Index(['historique_sante_mentale', 'problem_respiratoire', 'niveau_bruit',
-       'conditions_vie', 'charge_travail', 'soutien_social'])
+![](../reports/figures/random_forest_feature_importance.png)
 
-Nous observons quelques divergences : ici la variable relative aux problèmes respiratoires est la 5e plus importante, tandis qu'elle n'était pas sélectionnée par la régression Lasso. Les activités extrascolaires et la tension artérielle ont un niveau d'importance égal à zéro selon l'arbre de classification, tandis qu'elles étaient toutes deux sélectionnées par la régression Lasso.
+Nous observons quelques divergences : ici la variable relative aux problèmes respiratoires est la 5e plus importante, tandis qu'elle n'était pas sélectionnée par la régression Lasso. Les activités extrascolaires et la tension artérielle ont un niveau d'importance inférieur selon l'arbre de classification, tandis qu'elles étaient toutes deux sélectionnées par la régression Lasso.
 
 Nous choisissons dans la suite de considérer un dataset 'X_S' ne conservant que les cinq premières variables par ordre d'importance données ci-dessus. Nous choisissons également de limiter la profondeur de l'arbre à 10 afin d'éviter l'overfitting, puis à 5.
-
-(Inclure le graphe de l'arbre)
-
 En partant de cet arbre, nous passons à une forêt aléatoire.
 
-(Résultat de l'erreur1)
+```{python}
+performance_trees
+```
 
 L'erreur est minimale pour $5\leq n\leq10$ arbres dans la forêt. Seulement, cette dernière varie en fait très fortement jusqu'à $n \simeq 20-25$. Nous évaluons donc le modèle pour deux forêts de $n=25$ et $n=60$ arbres respectivement. Dans le dernier cas, on choisit un nombre d'arbres suffisamment important pour être certains d'être dans une zone où l'erreur s'est stabilisée autour d'une valeur minimale ($0.4$ environ). On diminue également le nombre d'arbres fixé par défaut à $100$. Cependant, pour les mêmes arguments, on aurait aussi bien pu prendre comme comparaison de $25$, $n=40$ ou $50$ arbres.
 
-(Resultat de l'erreur2)
+```{python}
+performance_random_forest
+```
 
 De même, on observe que l'erreur chute au delà de $n \geq 5$ arbres et se stabilise pour $n \geq 25$ arbres environ. Afin de comparer les résultats on estime aussi les erreurs pour deux forêts de $60$ et $25$ arbres.
 

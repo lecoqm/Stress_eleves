@@ -6,22 +6,36 @@ execute:
   warning: false
   message: false
 ---
+```{python}
+from pathlib import Path
+import pandas as pd
+from IPython.display import Markdown, display
+
+BASE_DIR = Path("..")
+TABLES_DIR = BASE_DIR / "reports" / "tables"
+FIGURES_DIR = BASE_DIR / "reports" / "figures"
+
+lasso_metrics = pd.read_csv(TABLES_DIR / "lasso_metrics.csv")
+coef_lasso = pd.read_csv(TABLES_DIR / "lasso_cv_coefficients.csv")
+lasso_best_c = pd.read_csv(TABLES_DIR / "lasso_best_c.csv")
+
+```
 
 
 Les résultats de la régression logistique avec toutes les variables et sans pénalisation sont très bons. Cependant, il peut être intéressant de rechercher un modèle plus parcimonieux, n'incluant que les variables ayant la plus grande influence sur le niveau de stress. On effectue donc une régression logistique avec pénalisation l1 (Lasso), pour mettre directement les variables les moins informatives à zéro.
 La fonction *LogisticRegression* ne permet pas de combiner une pénalisation l1 avec une approche multi-classe où l'on compare chacune des classes avec le solver *liblinear*. On adopte donc la stratégie '*one vs the rest*', qui prend une valeur de la variable 'niveau_stress' comme référence. On a vu précédemment que cette stratégie, dans le cas sans pénalisation, fournissait des résultats semblables à la méthode multiclasse.
 
-(Inclure les résultats)
+```{python}
+coef_lasso
+```
 
-Comme précédemment, nous nous intéressons à la matrice de confusion afin de visualiser les performances de la régression.
-
-(Inclure la matrice)
+### Régression Lasso avec validation croisée
 
 Nous améliorons très légèrement les performances du modèle, en comparaison avec la régression non pénalisée, avec une précision passée de $0.877$ à $0.886$. 
 
 Nous nous intéressons également aux courbes ROC, classe par classe.
 
-(Inclure les courbes)
+![](../reports/figures/roc_comparison.png)
 
 Les résultats sont dans les trois cas meilleurs pour le modèle OneVsRest non pénalisé : la courbe ROC est au dessus de celle associée au modèle Lasso.
 
@@ -31,12 +45,12 @@ Pour améliorer cette régression, nous réalisons des régressions par validati
 
 On donne les intervalles de confiance de l'*accuracy score* pour chacun des trois modèles de régression. Pour les deux premiers, sans pénalisation, les résultats sont presque égaux, avec une incertitude plus élevée pour la régression multiclasse que OneVsRest. Si l'*accuracy score* semble plus élevé pour la régression Lasso, en réalité l'intervalle de confiance est également plus grand *ie* le modèle est moins précis.
 
-(Inclure les résultats)
-
-La constante optimale est donc : (Inclure résultat)
+```{python}
+lasso_best_c
+```
 
 Enfin, nous regardons la matrice de confusion de cette nouvelle régression, ainsi que les courbes ROC, classe par classe.
 
-(Inclure les résultats)
+![](../reports/figures/confusion_lasso_cv.png)
 
 Le modèle Lasso avec constante choisie par validation croisée a un score AUC aussi bon que le modèle OneVsRest dans les trois cas. On dispose donc d'un modèle plus parcimonieux avec des performances équivalentes au modèle incluant toutes les variables explicatives.
