@@ -26,7 +26,7 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../site_libs/quarto-nav/headroom.min.js"></script>
 <script src="../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -70,6 +70,9 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -168,7 +171,8 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#validation-croisée" id="toc-validation-croisée" class="nav-link active" data-scroll-target="#validation-croisée">Validation croisée</a></li>
+  <li><a href="#régression-lasso-avec-validation-croisée" id="toc-régression-lasso-avec-validation-croisée" class="nav-link active" data-scroll-target="#régression-lasso-avec-validation-croisée">Régression Lasso avec validation croisée</a></li>
+  <li><a href="#validation-croisée" id="toc-validation-croisée" class="nav-link" data-scroll-target="#validation-croisée">Validation croisée</a></li>
   </ul>
 </nav>
     </div>
@@ -195,21 +199,223 @@ window.Quarto = {
 
 
 <p>Les résultats de la régression logistique avec toutes les variables et sans pénalisation sont très bons. Cependant, il peut être intéressant de rechercher un modèle plus parcimonieux, n’incluant que les variables ayant la plus grande influence sur le niveau de stress. On effectue donc une régression logistique avec pénalisation l1 (Lasso), pour mettre directement les variables les moins informatives à zéro. La fonction <em>LogisticRegression</em> ne permet pas de combiner une pénalisation l1 avec une approche multi-classe où l’on compare chacune des classes avec le solver <em>liblinear</em>. On adopte donc la stratégie ‘<em>one vs the rest</em>’, qui prend une valeur de la variable ‘niveau_stress’ comme référence. On a vu précédemment que cette stratégie, dans le cas sans pénalisation, fournissait des résultats semblables à la méthode multiclasse.</p>
-<p>(Inclure les résultats)</p>
-<p>Comme précédemment, nous nous intéressons à la matrice de confusion afin de visualiser les performances de la régression.</p>
-<p>(Inclure la matrice)</p>
+<div id="d1184554" class="cell" data-execution_count="2">
+<div class="cell-output cell-output-display" data-execution_count="2">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Unnamed: 0</th>
+<th data-quarto-table-cell-role="th">0</th>
+<th data-quarto-table-cell-role="th">1</th>
+<th data-quarto-table-cell-role="th">2</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>column00</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>niveau_anxiete</td>
+<td>-0.178368</td>
+<td>0.000000</td>
+<td>0.000000</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>estime_de_soi</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>-0.350138</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>historique_sante_mentale</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>depression</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.091729</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">5</th>
+<td>maux_de_tete</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.095342</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">6</th>
+<td>tension_arterielle</td>
+<td>0.000000</td>
+<td>-1.085586</td>
+<td>0.604196</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">7</th>
+<td>qualite_sommeil</td>
+<td>0.167463</td>
+<td>0.000000</td>
+<td>0.000000</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">8</th>
+<td>problem_respiratoire</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">9</th>
+<td>niveau_bruit</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.002253</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">10</th>
+<td>conditions_vie</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">11</th>
+<td>securite</td>
+<td>0.269134</td>
+<td>0.000000</td>
+<td>0.000000</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">12</th>
+<td>besoins_elementaires</td>
+<td>0.370096</td>
+<td>0.000000</td>
+<td>0.000000</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">13</th>
+<td>reussite_academique</td>
+<td>0.399375</td>
+<td>0.000000</td>
+<td>0.000000</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">14</th>
+<td>charge_travail</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">15</th>
+<td>relation_prof_etudiant</td>
+<td>0.126311</td>
+<td>-0.100958</td>
+<td>0.000000</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">16</th>
+<td>perspective_insertion_professionnelle</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.005598</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">17</th>
+<td>soutien_social</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">18</th>
+<td>pression_des_paires</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.241932</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">19</th>
+<td>activites_extrascolaires</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.116408</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">20</th>
+<td>harcelement</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.211103</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<section id="régression-lasso-avec-validation-croisée" class="level3">
+<h3 class="anchored" data-anchor-id="régression-lasso-avec-validation-croisée">Régression Lasso avec validation croisée</h3>
 <p>Nous améliorons très légèrement les performances du modèle, en comparaison avec la régression non pénalisée, avec une précision passée de <span class="math inline">\(0.877\)</span> à <span class="math inline">\(0.886\)</span>.</p>
 <p>Nous nous intéressons également aux courbes ROC, classe par classe.</p>
-<p>(Inclure les courbes)</p>
+<p><img src="../reports/figures/roc_comparison.png" class="img-fluid"></p>
 <p>Les résultats sont dans les trois cas meilleurs pour le modèle OneVsRest non pénalisé : la courbe ROC est au dessus de celle associée au modèle Lasso.</p>
+</section>
 <section id="validation-croisée" class="level1">
 <h1>Validation croisée</h1>
 <p>Pour améliorer cette régression, nous réalisons des régressions par validation croisée afin de choisir au mieux la constante de pénalisation <span class="math inline">\(C\)</span> associée au modèle Lasso.</p>
 <p>On donne les intervalles de confiance de l’<em>accuracy score</em> pour chacun des trois modèles de régression. Pour les deux premiers, sans pénalisation, les résultats sont presque égaux, avec une incertitude plus élevée pour la régression multiclasse que OneVsRest. Si l’<em>accuracy score</em> semble plus élevé pour la régression Lasso, en réalité l’intervalle de confiance est également plus grand <em>ie</em> le modèle est moins précis.</p>
-<p>(Inclure les résultats)</p>
-<p>La constante optimale est donc : (Inclure résultat)</p>
+<div id="6fdf9724" class="cell" data-execution_count="3">
+<div class="cell-output cell-output-display" data-execution_count="3">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">classe</th>
+<th data-quarto-table-cell-role="th">best_c</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>0</td>
+<td>0.01</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>1</td>
+<td>0.01</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>2</td>
+<td>0.01</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
 <p>Enfin, nous regardons la matrice de confusion de cette nouvelle régression, ainsi que les courbes ROC, classe par classe.</p>
-<p>(Inclure les résultats)</p>
+<p><img src="../reports/figures/confusion_lasso_cv.png" class="img-fluid"></p>
 <p>Le modèle Lasso avec constante choisie par validation croisée a un score AUC aussi bon que le modèle OneVsRest dans les trois cas. On dispose donc d’un modèle plus parcimonieux avec des performances équivalentes au modèle incluant toutes les variables explicatives.</p>
 
 
