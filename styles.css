@@ -21,14 +21,14 @@ p {
 
 /* Styles pour les sorties de cellules */
 .cell-output {
-background-color: #EAF2F8;
+background-color: #ffffff;
 border-radius: 4px;
 font-size: 12px; /* Taille de police */
 }
 
 /* Styles pour les sorties standard de cellules */
 .cell-output-stdout {
-background-color: #EAF2F8;
+background-color: #ffffff;
 border-radius: 4px;
 font-size: 12px; /* Taille de police */
 }
@@ -40,6 +40,6 @@ font-size: 12px; /* Taille de police */
 
 .blockquote {
   margin-left: 2em;
-  background-color: #EAF2F8;
+  background-color: #ffffff;
   color: black
 }
