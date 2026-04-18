@@ -11,7 +11,7 @@ exclude:
 jupyter: .venv/bin/python3
 
 website:
-  title: "Rapport"
+  title: "Stress des élèves dans le supérieur"
   navbar:
     left:
       - href: index.qmd

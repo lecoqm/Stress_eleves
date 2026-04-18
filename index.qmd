@@ -8,3 +8,6 @@ A partir d'un jeu de données anonymisées sur le stress des élèves dans le su
 - [**Régression Lasso avec validation croisée**](https://lecoqm.github.io/Stress_eleves/models/lasso.html)
 - [**Random Forest avec fine tuning**](https://lecoqm.github.io/Stress_eleves/models/random.html)
 - [**Boosting avec fine tuning**](https://lecoqm.github.io/Stress_eleves/models/boosting.html)
+
+
+Travail réalisé par : Léa LAGONOTTE, Mathis LECOQ, Sarah OULD AKLOUCHE, Olivier PINATEL et Aurane VERNIÈRE.
