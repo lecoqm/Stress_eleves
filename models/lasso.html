@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Régression Lasso – Rapport</title>
+<title>Régression Lasso – Stress des élèves dans le supérieur</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -115,7 +115,7 @@ window.Quarto = {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">Rapport</span>
+    <span class="navbar-title">Stress des élèves dans le supérieur</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -199,7 +199,7 @@ window.Quarto = {
 
 
 <p>Les résultats de la régression logistique avec toutes les variables et sans pénalisation sont très bons. Cependant, il peut être intéressant de rechercher un modèle plus parcimonieux, n’incluant que les variables ayant la plus grande influence sur le niveau de stress. On effectue donc une régression logistique avec pénalisation l1 (Lasso), pour mettre directement les variables les moins informatives à zéro. La fonction <em>LogisticRegression</em> ne permet pas de combiner une pénalisation l1 avec une approche multi-classe où l’on compare chacune des classes avec le solver <em>liblinear</em>. On adopte donc la stratégie ‘<em>one vs the rest</em>’, qui prend une valeur de la variable ‘niveau_stress’ comme référence. On a vu précédemment que cette stratégie, dans le cas sans pénalisation, fournissait des résultats semblables à la méthode multiclasse.</p>
-<div id="19dd026a" class="cell" data-execution_count="2">
+<div id="e9aa0bb4" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display" data-execution_count="2">
 <div>
 
@@ -379,7 +379,7 @@ window.Quarto = {
 <h1>Validation croisée</h1>
 <p>Pour améliorer cette régression, nous réalisons des régressions par validation croisée afin de choisir au mieux la constante de pénalisation <span class="math inline">\(C\)</span> associée au modèle Lasso.</p>
 <p>On donne les intervalles de confiance de l’<em>accuracy score</em> pour chacun des trois modèles de régression. Pour les deux premiers, sans pénalisation, les résultats sont presque égaux, avec une incertitude plus élevée pour la régression multiclasse que OneVsRest. Si l’<em>accuracy score</em> semble plus élevé pour la régression Lasso, en réalité l’intervalle de confiance est également plus grand <em>ie</em> le modèle est moins précis.</p>
-<div id="a533ba8d" class="cell" data-execution_count="3">
+<div id="ba3dc30e" class="cell" data-execution_count="3">
 <div class="cell-output cell-output-display" data-execution_count="3">
 <div>
 
