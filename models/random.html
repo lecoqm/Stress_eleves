@@ -193,7 +193,7 @@ window.Quarto = {
 
 <p>Nous choisissons ensuite de tester un type de modèle différent : la forêt aléatoire, en espérant améliorer encore les performances.</p>
 <p>Pour rappel, avec le modèle de régression Lasso, on avait en regroupant les résultats des trois régressions possibles :</p>
-<div id="7dabf5af" class="cell" data-execution_count="2">
+<div id="8397132e" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display" data-execution_count="2">
 <div>
 
@@ -324,7 +324,7 @@ window.Quarto = {
 <p><img src="../reports/figures/random_forest_feature_importance.png" class="img-fluid"></p>
 <p>Nous choisissons dans la suite de considérer un dataset ‘X_S’ ne conservant que les cinq premières variables par ordre d’importance données ci-dessus. Nous choisissons également de limiter la profondeur de l’arbre à 10 afin d’éviter l’overfitting, puis à 5. En partant de cet arbre, nous passons à une forêt aléatoire.</p>
 <p>L’erreur est minimale pour <span class="math inline">\(5\leq n\leq10\)</span> arbres dans la forêt. Seulement, cette dernière varie en fait très fortement jusqu’à <span class="math inline">\(n \simeq 20-25\)</span>. Nous évaluons donc le modèle pour deux forêts de <span class="math inline">\(n=25\)</span> et <span class="math inline">\(n=60\)</span> arbres respectivement. Dans le dernier cas, on choisit un nombre d’arbres suffisamment important pour être certains d’être dans une zone où l’erreur s’est stabilisée autour d’une valeur minimale (<span class="math inline">\(0.4\)</span> environ). On diminue également le nombre d’arbres fixé par défaut à <span class="math inline">\(100\)</span>. Cependant, pour les mêmes arguments, on aurait aussi bien pu prendre comme comparaison de <span class="math inline">\(25\)</span>, <span class="math inline">\(n=40\)</span> ou <span class="math inline">\(50\)</span> arbres.</p>
-<div id="5fd15560" class="cell" data-execution_count="3">
+<div id="32cd19da" class="cell" data-execution_count="3">
 <div class="cell-output cell-output-display" data-execution_count="3">
 <div>
 
