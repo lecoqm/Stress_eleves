@@ -48,12 +48,12 @@ On réalise une régression logistique sans pénalisation, pour avoir un premier
 
 - Pour la régression logistique multiclasse,
 
-![](/reports/figures/confusion_multiclasse.png)
+![](reports/figures/confusion_logistic_multiclass.png)
 
 ## Résultats pour la régression logistique
 - Pour la régression OneVsRest,
 
-![](/reports/figures/confusion_onevsrest.png)
+![](reports/figures/confusion_logistic_ovr.png)
 
 ## Régression Lasso
 - Les résultats de la régression logistique avec toutes les variables et sans pénalisation sont très bons. 
@@ -61,11 +61,11 @@ On réalise une régression logistique sans pénalisation, pour avoir un premier
 
 ## Régression Lasso : résultats
 
-![](/reports/figures/confusion_lasso_cv.png)
+![](reports/figures/confusion_lasso_cv.png)
 
 ## Comparaison des courbes ROC
 
-![](/reports/figures/roc_comparison.png)
+![](reports/figures/roc_comparison.png)
 
 ## Random Forest
 
