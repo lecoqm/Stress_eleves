@@ -75,14 +75,14 @@ On réalise une régression logistique sans pénalisation, pour avoir un premier
 ## Random Forest : résultats
 
 ```{python}
-#| output: asis
 from pathlib import Path
 import pandas as pd
+from IPython.display import display
 
 rf_path = Path("reports/tables/performance_random_forest.csv")
 
 if rf_path.exists():
-    pd.read_csv(rf_path.to_markdown(index=False))
+    display(pd.read_csv(rf_path))
 else:
     print("Fichier performance_random_forest.csv introuvable")
 ```
@@ -95,14 +95,14 @@ Nous testons à présent l’approche par Gradient Boosting. Il s’agit dans un
 ## Boosting : résultats
 
 ```{python}
-#| output: asis
 from pathlib import Path
 import pandas as pd
+from IPython.display import display
 
 boosting_path = Path("reports/tables/performance_boosting.csv")
 
 if boosting_path.exists():
-    pd.read_csv(boosting_path.to_markdown(index=False))
+    display(pd.read_csv(boosting_path))
 else:
     print("Fichier performance_boosting.csv introuvable")
 ```
