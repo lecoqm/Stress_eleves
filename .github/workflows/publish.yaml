@@ -7,12 +7,10 @@ on:
       - dev
   workflow_dispatch:
   schedule:
-    - cron: "0 5 * * 1"
+    - cron: "00 5 * * 1"
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
   group: publish-${{ github.ref }}
@@ -24,10 +22,13 @@ jobs:
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.11"
           cache: "pip"
@@ -35,19 +36,12 @@ jobs:
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
-
-      - name: Check SOURCE_URL
-        run: |
-          if [ -z "${{ secrets.SOURCE_URL }}" ]; then
-            echo "Le secret SOURCE_URL est absent ou vide."
-            exit 1
-          fi
+          pip install jupyter nbclient ipykernel -r requirements.txt
 
       - name: Ingest latest data
         env:
           SOURCE_URL: ${{ secrets.SOURCE_URL }}
-        run: python -m scripts.ingest
+        run: python scripts/ingest.py
 
       - name: Recompute model outputs
         run: python main.py
@@ -55,13 +49,9 @@ jobs:
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
 
-      - name: Render website
-        run: quarto render
-
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Render and publish to GitHub Pages
+        uses: quarto-dev/quarto-actions/publish@v2
         with:
-          path: _site
-
-      - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v4
+          target: gh-pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
