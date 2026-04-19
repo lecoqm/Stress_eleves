@@ -104,7 +104,7 @@ roc_macro
 
 
 ## Courbes ROC
-Une autre manière de visualiser les performances des trois modèles et de tracer les courbes ROC. Les résultats des trois méthodes sont très satisfaisants et comparables.
+Une autre manière de visualiser les performances des trois modèles est de tracer les courbes ROC. Les résultats des trois méthodes sont très satisfaisants et comparables.
 
 Nous observons que les deux méthodes de régressions fournissent des résultats équivalents, les courbes sont superposées, il n'y en n'a pas une très clairement au dessus de l'autre dans chacun des trois cas.
 

@@ -46,7 +46,7 @@ Le résultat obtenu est le suivant :
 performance_random_forest
 ```
 
-On compare les résultats du modèle de forêts aléatoire au *Gradient Boosting*, une extension a priori un plus performante de ces modèles. On *fine tune* ici aussi directement les paramètres afin d’obtenir directement le modèle le plus performant possible. On constate que l’erreur réalisée est légèrement plus importante que celle obtenue avec le modèle de forêts aléatoires. 
+On compare les résultats du modèle de forêt aléatoire au *Gradient Boosting*, une extension a priori un plus performante de ces modèles. On *fine tune* ici aussi directement les paramètres afin d’obtenir directement le modèle le plus performant possible. On constate que l’erreur réalisée est légèrement plus importante que celle obtenue avec le modèle de forêts aléatoires. 
 
 ```{python}
 performance_boosting
