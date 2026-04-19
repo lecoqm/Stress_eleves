@@ -137,7 +137,7 @@
     "href": "slides.html#random-forest-résultats",
     "title": "Stress des élèves dans le supérieur",
     "section": "Random Forest : résultats",
-    "text": "Random Forest : résultats\n\n\n\n\n\n\n\n\n\n\nmodel_name\nrmse_train\nrmse_test\nparametres\nvariables_utilisees\n\n\n\n\n0\nRandomForest\n0.320938\n0.427311\n{'n_estimators': 200, 'min_samples_split': 10,...\nreussite_academique, qualite_sommeil, relation..."
+    "text": "Random Forest : résultats\n\n\n\n\n\n\n\n\n\nmodel_name\nrmse_train\nrmse_test\nparametres\nvariables_utilisees\n\n\n\n\n0\nRandomForest\n0.320938\n0.427311\n{'n_estimators': 200, 'min_samples_split': 10,...\nreussite_academique, qualite_sommeil, relation..."
   },
   {
     "objectID": "slides.html#boosting",
@@ -151,7 +151,7 @@
     "href": "slides.html#boosting-résultats",
     "title": "Stress des élèves dans le supérieur",
     "section": "Boosting : résultats",
-    "text": "Boosting : résultats\n\n\n\n\n\n\n\n\n\n\nmodel_name\nrmse_train\nrmse_test\nparametres\nvariables_utilisees\n\n\n\n\n0\nGradientBoosting\n0.303186\n0.434848\n{'n_estimators': 50, 'max_depth': 3, 'learning...\nreussite_academique, qualite_sommeil, relation..."
+    "text": "Boosting : résultats\n\n\n\n\n\n\n\n\n\nmodel_name\nrmse_train\nrmse_test\nparametres\nvariables_utilisees\n\n\n\n\n0\nGradientBoosting\n0.303186\n0.434848\n{'n_estimators': 50, 'max_depth': 3, 'learning...\nreussite_academique, qualite_sommeil, relation..."
   },
   {
     "objectID": "models/random.html",
