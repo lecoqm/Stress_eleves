@@ -1,7 +1,6 @@
 __pycache__/
 .env
 .ruff_cache
-data/
 recording.log
 .venv
 /.quarto/
