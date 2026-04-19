@@ -6,6 +6,7 @@ format:
     theme: simple
     slide-number: true
     toc: false
+    css: style.css
 execute:
   echo: false
   warning: false
@@ -48,12 +49,16 @@ On réalise une régression logistique sans pénalisation, pour avoir un premier
 
 - Pour la régression logistique multiclasse,
 
+::: {.small-img}
 ![](reports/figures/confusion_logistic_multiclass.png)
+:::
 
 ## Résultats pour la régression logistique
 - Pour la régression OneVsRest,
 
+::: {.small-img}
 ![](reports/figures/confusion_logistic_ovr.png)
+:::
 
 ## Régression Lasso
 - Les résultats de la régression logistique avec toutes les variables et sans pénalisation sont très bons. 
@@ -61,11 +66,15 @@ On réalise une régression logistique sans pénalisation, pour avoir un premier
 
 ## Régression Lasso : résultats
 
+::: {.small-img}
 ![](reports/figures/confusion_lasso_cv.png)
+:::
 
 ## Comparaison des courbes ROC
 
+::: {.small-img}
 ![](reports/figures/roc_comparison.png)
+:::
 
 ## Random Forest
 
@@ -74,6 +83,8 @@ On réalise une régression logistique sans pénalisation, pour avoir un premier
 
 ## Random Forest : résultats
 
+
+::: {.small-table}
 ```{python}
 from pathlib import Path
 import pandas as pd
@@ -86,6 +97,7 @@ if rf_path.exists():
 else:
     print("Fichier performance_random_forest.csv introuvable")
 ```
+:::
 
 ## Boosting
 
@@ -94,6 +106,7 @@ Nous testons à présent l’approche par Gradient Boosting. Il s’agit dans un
 
 ## Boosting : résultats
 
+::: {.small-table}
 ```{python}
 from pathlib import Path
 import pandas as pd
@@ -106,3 +119,4 @@ if boosting_path.exists():
 else:
     print("Fichier performance_boosting.csv introuvable")
 ```
+:::
