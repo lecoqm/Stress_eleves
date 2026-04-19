@@ -9,4 +9,3 @@ recording.log
 *_files
 _site/
 **/*.quarto_ipynb
-reports/
