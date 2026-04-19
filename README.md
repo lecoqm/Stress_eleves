@@ -80,3 +80,6 @@ uv run scripts/ingest.py
 - **uv.lock** : garantissent que les versions des packages installés correspondent à celles utilisées par l'auteur du dépôt.
 - **Dockerfile** : fichier servant à la construction de l'image Docker du dépôt.
 - **README.md** : description du dépôt et guide d'utilisation.
+
+### Dépôt d'origine
+https://github.com/averniere/Stress_eleves 
