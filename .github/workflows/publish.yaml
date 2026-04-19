@@ -7,10 +7,12 @@ on:
       - dev
   workflow_dispatch:
   schedule:
-    - cron: "00 5 * * 1"
+    - cron: "0 5 * * 1"
 
 permissions:
-  contents: write
+  contents: read
+  pages: write
+  id-token: write
 
 concurrency:
   group: publish-${{ github.ref }}
@@ -22,13 +24,10 @@ jobs:
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v6
-        with:
-          ref: ${{ github.ref_name }}
-          fetch-depth: 0
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v5
         with:
           python-version: "3.11"
           cache: "pip"
@@ -36,26 +35,19 @@ jobs:
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install jupyter nbclient ipykernel -r requirements.txt
+          pip install -r requirements.txt
+
+      - name: Check SOURCE_URL
+        run: |
+          if [ -z "${{ secrets.SOURCE_URL }}" ]; then
+            echo "Le secret SOURCE_URL est absent ou vide."
+            exit 1
+          fi
 
       - name: Ingest latest data
         env:
           SOURCE_URL: ${{ secrets.SOURCE_URL }}
-        run: python scripts/ingest.py
-
-      - name: Commit updated raw data
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          git add data/raw/stress_latest.parquet data/raw/metadata.json
-
-          if git diff --cached --quiet; then
-            echo "Aucun changement dans les données ingérées."
-          else
-            git commit -m "chore: update ingested data [skip ci]"
-            git push origin HEAD:${{ github.ref_name }}
-          fi
+        run: python -m scripts.ingest
 
       - name: Recompute model outputs
         run: python main.py
@@ -63,9 +55,13 @@ jobs:
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
 
-      - name: Render and publish to GitHub Pages
-        uses: quarto-dev/quarto-actions/publish@v2
+      - name: Render website
+        run: quarto render
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          target: gh-pages
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          path: _site
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4

@@ -1,10 +1,7 @@
 __pycache__/
 .env
 .ruff_cache
-data/*
-!data/raw/
-!data/raw/stress_latest.parquet
-!data/raw/metadata.json
+data/
 recording.log
 .venv
 /.quarto/
