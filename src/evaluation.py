@@ -12,7 +12,7 @@ from sklearn.metrics import (
 )
 from sklearn.preprocessing import label_binarize
 
-from config import FIGURES_DIR, TABLES_DIR
+from src.config import FIGURES_DIR, TABLES_DIR
 
 
 def evaluate_classifier(model, x_test, y_test, average="weighted"):

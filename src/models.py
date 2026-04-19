@@ -6,7 +6,7 @@ from sklearn.model_selection import RandomizedSearchCV
 from sklearn.multiclass import OneVsRestClassifier
 from sklearn.tree import DecisionTreeRegressor
 
-from config import C_GRID_LASSO, CV_FOLDS, RANDOM_STATE
+from src.config import C_GRID_LASSO, CV_FOLDS, RANDOM_STATE
 
 
 class StressModels:

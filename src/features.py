@@ -2,7 +2,7 @@ import logging
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 import pandas as pd
-from config import RANDOM_STATE, TEST_SIZE
+from src.config import RANDOM_STATE, TEST_SIZE
 
 logger = logging.getLogger(__name__)
 
