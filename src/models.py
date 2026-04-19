@@ -6,10 +6,24 @@ from sklearn.model_selection import RandomizedSearchCV
 from sklearn.multiclass import OneVsRestClassifier
 from sklearn.tree import DecisionTreeRegressor
 
-from src.config import C_GRID_LASSO, CV_FOLDS, RANDOM_STATE
+from config import C_GRID_LASSO, CV_FOLDS, RANDOM_STATE
 
 
 class StressModels:
+    """
+    Classe regroupant l'entraînement des modèles de prédiction du niveau de stress.
+
+    Parameters
+    ----------
+    x_train : pd.DataFrame
+        Features d'entraînement.
+    y_train : pd.Series
+        Labels d'entraînement.
+    x_test : pd.DataFrame
+        Features de test.
+    y_test : pd.Series
+        Labels de test.
+    """
     def __init__(self, x_train, y_train, x_test, y_test):
         self.x_train = x_train
         self.y_train = y_train
@@ -17,6 +31,21 @@ class StressModels:
         self.y_test = y_test
 
     def train_logistic_regression(self):
+        """
+        Entraîne trois modèles de régression logistique.
+
+        Les modèles entraînés sont :
+        - Multiclasse : régression logistique multinomiale sans pénalité.
+        - OneVsRest : régression logistique OvR sans pénalité.
+        - Lasso_CV : régression logistique OvR avec pénalité L1 et sélection
+          du paramètre C par validation croisée (grille C_GRID_LASSO, CV_FOLDS folds).
+
+        Returns
+        -------
+        dict
+            Dictionnaire {"Multiclasse": model, "OneVsRest": model, "Lasso_CV": model}
+            des modèles entraînés.
+        """
         model_multinom = LogisticRegression(
             penalty=None,
             max_iter=1000,
@@ -52,6 +81,22 @@ class StressModels:
         }
 
     def get_top_features_from_cart(self, n_top=5):
+        """
+        Entraîne un arbre de décision CART et retourne les variables les plus importantes.
+
+        Parameters
+        ----------
+        n_top : int, optional
+            Nombre de variables à conserver (default: 5).
+
+        Returns
+        -------
+        dict
+            Dictionnaire contenant :
+            - "feature_importances" : pd.DataFrame trié par importance décroissante
+              (colonnes "feature" et "importance").
+            - "top_features" : list des n_top noms de variables les plus importantes.
+        """
         cart = DecisionTreeRegressor(random_state=RANDOM_STATE)
         cart.fit(self.x_train, self.y_train)
 
@@ -74,6 +119,23 @@ class StressModels:
         }
 
     def train_tree_models(self):
+        """
+        Entraîne un Random Forest et un Gradient Boosting sur les top features CART.
+
+        Les hyperparamètres sont sélectionnés par RandomizedSearchCV (10 itérations,
+        3 folds, scoring RMSE). Les deux modèles sont entraînés sur les 5 variables
+        les plus importantes issues de get_top_features_from_cart.
+
+        Returns
+        -------
+        dict
+            Dictionnaire contenant :
+            - "cart_feature_importances" : pd.DataFrame des importances CART.
+            - "top_features" : list des variables sélectionnées par le CART.
+            - "rf_feature_importances" : pd.DataFrame des importances du Random Forest.
+            - "tree_metrics" : pd.DataFrame des performances (RMSE train/test,
+              meilleurs hyperparamètres, variables utilisées) pour chaque modèle.
+        """
         cart_results = self.get_top_features_from_cart(n_top=5)
         top_features = cart_results["top_features"]
 

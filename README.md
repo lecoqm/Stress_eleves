@@ -59,16 +59,24 @@ ou
 ```bash
 uv run main.py --target_col mavariable
 ```
- 
+### Ingestion de nouvelles données
+
+Pour ajouter un nouveau jeu de données sur lequel exécuter le code, faire : 
+```bash
+uv run scripts/ingest.py
+```
+
 ### Structure du dépôt
+- **.github/*** : fichiers de configuration du dépôt.
+- **notebooks/** : contient le notebook initial duquel est issu le code du projet.
 - **src/** : code source du projet comprenant les scripts de configuration des hyperparamètres, de pré-traitement des données, de définition des modèles, de traitement des résultats.
 - **main.py** : fichier principal d'exécution des modèles.
+- **scripts/ingest.py** : gère l'ingestion de nouvelles données sur lesquelles exécuter les modèles.
+- **index.qmd**, **_quarto.yml** et **styles.css**, **_freeze/** : fichiers de configuration du site hébergeant le rapport.
 - **models** : fichiers quarto décrivant les résultats pour chacun des modèles mis en oeuvre.
-- **index.qmd**, **_quarto.yml** et **styles.css** : fichiers (quarto) de configuration du site hébergeant le rapport.
-- **requirements.txt** : liste des dépendances Python à installer.
-- **uv.lock** et **pyproject.toml** : garantissent que la version installée correspond à celle utilisée par l'auteur du dépôt.
-- **Dockerfile** : fichier servant à la construction de l'image Docker.
+- **reports/** : fichier stockant les figures et les tableaux générés par l'exécution du code.
+- **slides.qmd** : fichier quarto des slides du site internet. 
+- **requirements.txt** et **pyproject.toml**: dépendances Python à installer.
+- **uv.lock** : garantissent que les versions des packages installés correspondent à celles utilisées par l'auteur du dépôt.
+- **Dockerfile** : fichier servant à la construction de l'image Docker du dépôt.
 - **README.md** : description du dépôt et guide d'utilisation.
-
-Momentanément (?) :
-- **notebooks/** : contient le notebook initial duquel est issu le code du projet.

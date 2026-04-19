@@ -12,10 +12,29 @@ from sklearn.metrics import (
 )
 from sklearn.preprocessing import label_binarize
 
-from src.config import FIGURES_DIR, TABLES_DIR
+from config import FIGURES_DIR, TABLES_DIR
 
 
 def evaluate_classifier(model, x_test, y_test, average="weighted"):
+    """
+    Évalue un modèle de classification sur un jeu de test.
+
+    Parameters
+    ----------
+    model : estimator sklearn
+        Modèle entraîné disposant d'une méthode predict (et optionnellement predict_proba).
+    x_test : array-like
+        Features du jeu de test.
+    y_test : array-like
+        Labels réels du jeu de test.
+    average : str, optional
+        Stratégie de moyennage pour precision et recall (default: "weighted").
+
+    Returns
+    -------
+    dict
+        Dictionnaire contenant y_pred, y_pred_proba, accuracy, precision et recall.
+    """
     y_pred = model.predict(x_test)
     y_pred_proba = model.predict_proba(x_test) if hasattr(model, "predict_proba") else None
 
@@ -29,6 +48,22 @@ def evaluate_classifier(model, x_test, y_test, average="weighted"):
 
 
 def _coef_dataframe(model):
+    """
+    Extrait les coefficients d'un modèle logistique sous forme de DataFrame.
+
+    Gère aussi bien les modèles OneVsRest (attribut estimators_) que les
+    modèles multiclasses natifs (attribut coef_).
+
+    Parameters
+    ----------
+    model : estimator sklearn
+        Modèle logistique entraîné.
+
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame (classes x features) des coefficients du modèle.
+    """
     if hasattr(model, "estimators_"):
         feature_names = model.feature_names_in_
         classes = model.classes_
@@ -58,6 +93,21 @@ def _save_table(df, filename, index=False):
 
 
 def save_logistic_coefficients(logistic_results):
+    """
+    Sauvegarde les coefficients des modèles logistiques en CSV.
+
+    Génère les fichiers suivants dans TABLES_DIR :
+    - logistic_multiclass_coefficients.csv
+    - logistic_ovr_coefficients.csv
+    - lasso_cv_coefficients.csv
+    - lasso_selected_variables.csv  (variables avec au moins un coef non nul)
+    - lasso_best_c.csv              (meilleur C par classe pour le Lasso)
+
+    Parameters
+    ----------
+    logistic_results : dict
+        Dictionnaire {"Multiclasse": model, "OneVsRest": model, "Lasso_CV": model}.
+    """
     coef_multiclasse = _coef_dataframe(logistic_results["Multiclasse"]).T
     _save_table(coef_multiclasse, "logistic_multiclass_coefficients.csv", index=True)
 
@@ -88,6 +138,26 @@ def save_logistic_coefficients(logistic_results):
 
 
 def save_logistic_metrics(logistic_results, x_test, y_test):
+    """
+    Calcule et sauvegarde les métriques des modèles logistiques en CSV.
+
+    Génère logistic_metrics.csv (tous les modèles) et lasso_metrics.csv
+    (Lasso uniquement) dans TABLES_DIR.
+
+    Parameters
+    ----------
+    logistic_results : dict
+        Dictionnaire {"Multiclasse": model, "OneVsRest": model, "Lasso_CV": model}.
+    x_test : array-like
+        Features du jeu de test.
+    y_test : array-like
+        Labels réels du jeu de test.
+
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame des métriques (accuracy, precision, recall) par modèle.
+    """
     rows = []
 
     for model_name, model in logistic_results.items():
@@ -112,6 +182,22 @@ def save_logistic_metrics(logistic_results, x_test, y_test):
 
 
 def plot_confusion_matrix(model, x_test, y_test, filename, title=None):
+    """
+    Trace et sauvegarde la matrice de confusion d'un modèle.
+
+    Parameters
+    ----------
+    model : estimator sklearn
+        Modèle entraîné.
+    x_test : array-like
+        Features du jeu de test.
+    y_test : array-like
+        Labels réels du jeu de test.
+    filename : str
+        Nom du fichier PNG de destination (dans FIGURES_DIR).
+    title : str, optional
+        Titre du graphique. Si None, dérivé du nom de fichier.
+    """
     y_pred = model.predict(x_test)
     labels = model.classes_ if hasattr(model, "classes_") else None
 
@@ -129,6 +215,23 @@ def plot_confusion_matrix(model, x_test, y_test, filename, title=None):
 
 
 def save_all_confusion_matrices(logistic_results, x_test, y_test):
+    """
+    Sauvegarde les matrices de confusion des trois modèles logistiques.
+
+    Génère dans FIGURES_DIR :
+    - confusion_logistic_multiclass.png
+    - confusion_logistic_ovr.png
+    - confusion_lasso_cv.png
+
+    Parameters
+    ----------
+    logistic_results : dict
+        Dictionnaire {"Multiclasse": model, "OneVsRest": model, "Lasso_CV": model}.
+    x_test : array-like
+        Features du jeu de test.
+    y_test : array-like
+        Labels réels du jeu de test.
+    """
     plot_confusion_matrix(
         logistic_results["Multiclasse"],
         x_test,
@@ -153,6 +256,24 @@ def save_all_confusion_matrices(logistic_results, x_test, y_test):
 
 
 def _compute_roc_metrics(y_true_bin, y_pred_proba, n_classes):
+    """
+    Calcule les métriques ROC par classe et la courbe macro-moyenne.
+
+    Parameters
+    ----------
+    y_true_bin : np.ndarray
+        Labels binarisés (shape: n_samples x n_classes).
+    y_pred_proba : np.ndarray
+        Probabilités prédites (shape: n_samples x n_classes).
+    n_classes : int
+        Nombre de classes.
+
+    Returns
+    -------
+    dict
+        Dictionnaire indexé par classe (int) et "macro", chacun contenant
+        les métriques "fpr", "tpr" et "auc".
+    """
     metrics = {}
     fpr_macro = np.linspace(0, 1, 100)
     tpr_macro_accumulator = np.zeros(100)
@@ -175,6 +296,21 @@ def _compute_roc_metrics(y_true_bin, y_pred_proba, n_classes):
 
 
 def plot_roc_curves_comparison(logistic_results, x_test, y_test):
+    """
+    Trace les courbes ROC de tous les modèles logistiques dans une figure comparée.
+
+    Sauvegarde roc_logistic_comparison.png dans FIGURES_DIR et
+    roc_logistic_summary.csv (AUC par modèle et classe) dans TABLES_DIR.
+
+    Parameters
+    ----------
+    logistic_results : dict
+        Dictionnaire {nom_modele: model} des modèles à comparer.
+    x_test : array-like
+        Features du jeu de test.
+    y_test : array-like
+        Labels réels du jeu de test.
+    """
     classes = np.unique(y_test)
     n_classes = len(classes)
     y_test_bin = label_binarize(y_test, classes=classes)
@@ -250,12 +386,46 @@ def plot_roc_curves_comparison(logistic_results, x_test, y_test):
 
 
 def save_all_logistic_artifacts(logistic_results, x_test, y_test):
+    """
+    Orchestre la sauvegarde de tous les artefacts des modèles logistiques.
+
+    Appelle successivement :
+    - save_logistic_coefficients
+    - save_logistic_metrics
+    - plot_roc_curves_comparison
+
+    Parameters
+    ----------
+    logistic_results : dict
+        Dictionnaire {"Multiclasse": model, "OneVsRest": model, "Lasso_CV": model}.
+    x_test : array-like
+        Features du jeu de test.
+    y_test : array-like
+        Labels réels du jeu de test.
+    """
     save_logistic_coefficients(logistic_results)
     save_logistic_metrics(logistic_results, x_test, y_test)
     plot_roc_curves_comparison(logistic_results, x_test, y_test)
 
 
 def save_tree_tables(tree_results):
+    """
+    Sauvegarde les tableaux de résultats des modèles arborescents en CSV.
+
+    Génère dans TABLES_DIR :
+    - cart_feature_importance.csv
+    - random_forest_feature_importance.csv
+    - performance_trees.csv (tous les modèles)
+    - performance_random_forest.csv
+    - performance_boosting.csv
+    - tree_model_comparison.csv (RMSE train/test par modèle)
+
+    Parameters
+    ----------
+    tree_results : dict
+        Dictionnaire contenant les clés "cart_feature_importances",
+        "rf_feature_importances" et "tree_metrics".
+    """
     cart_feature_importances = tree_results["cart_feature_importances"]
     rf_feature_importances = tree_results["rf_feature_importances"]
     tree_metrics = tree_results["tree_metrics"].copy()
@@ -289,6 +459,17 @@ def save_tree_tables(tree_results):
 
 
 def plot_random_forest_feature_importance(tree_results):
+    """
+    Trace et sauvegarde le graphique des 10 variables les plus importantes du Random Forest.
+
+    Sauvegarde random_forest_feature_importance.png dans FIGURES_DIR.
+
+    Parameters
+    ----------
+    tree_results : dict
+        Dictionnaire contenant la clé "rf_feature_importances"
+        (DataFrame avec colonnes "feature" et "importance").
+    """
     rf_feature_importances = tree_results["rf_feature_importances"].copy().head(10)
 
     fig, ax = plt.subplots(figsize=(10, 6))
@@ -304,6 +485,17 @@ def plot_random_forest_feature_importance(tree_results):
 
 
 def plot_tree_model_comparison(tree_results):
+    """
+    Trace et sauvegarde un graphique comparant les RMSE test des modèles arborescents.
+
+    Sauvegarde tree_model_comparison.png dans FIGURES_DIR.
+
+    Parameters
+    ----------
+    tree_results : dict
+        Dictionnaire contenant la clé "tree_metrics"
+        (DataFrame avec colonnes "model_name" et "rmse_test").
+    """
     tree_metrics = tree_results["tree_metrics"]
 
     fig, ax = plt.subplots(figsize=(8, 5))
@@ -318,6 +510,19 @@ def plot_tree_model_comparison(tree_results):
 
 
 def save_tree_artifacts(tree_results):
+    """
+    Orchestre la sauvegarde de tous les artefacts des modèles arborescents.
+
+    Appelle successivement :
+    - save_tree_tables
+    - plot_random_forest_feature_importance
+    - plot_tree_model_comparison
+
+    Parameters
+    ----------
+    tree_results : dict
+        Dictionnaire contenant les résultats des modèles arborescents.
+    """
     save_tree_tables(tree_results)
     plot_random_forest_feature_importance(tree_results)
     plot_tree_model_comparison(tree_results)
