@@ -38,12 +38,9 @@ jobs:
           python -m pip install --upgrade pip
           pip install jupyter nbclient ipykernel -r requirements.txt
 
-      - name: Ingest latest data
+      - name: Recompute model outputs
         env:
           SOURCE_URL: ${{ secrets.SOURCE_URL }}
-        run: python scripts/ingest.py
-
-      - name: Recompute model outputs
         run: python main.py
 
       - name: Set up Quarto

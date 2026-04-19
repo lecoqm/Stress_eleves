@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import json
 import logging
 import os
 import sys
@@ -17,12 +16,6 @@ try:
     from src.config import URL_RAW
 except Exception:
     URL_RAW = "https://minio.lab.sspcloud.fr/averniere/Stress_eleves/data/stress.parquet"
-
-DATA_DIR = ROOT_DIR / "data" / "raw"
-DATA_DIR.mkdir(parents=True, exist_ok=True)
-
-OUTPUT_PARQUET = DATA_DIR / "stress_latest.parquet"
-OUTPUT_METADATA = DATA_DIR / "metadata.json"
 
 REQUIRED_COLUMNS = [
     "niveau_anxiete",
@@ -55,7 +48,14 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-def read_source(source):
+def resolve_source(source: str | None = None) -> str:
+    resolved_source = source or os.getenv("SOURCE_URL") or URL_RAW
+    if not resolved_source:
+        raise EnvironmentError("SOURCE_URL absente et URL_RAW non définie.")
+    return resolved_source
+
+
+def read_source(source: str) -> pd.DataFrame:
     """
     Lit une source locale ou distante.
     Formats gérés :
@@ -78,7 +78,7 @@ def read_source(source):
     )
 
 
-def clean_dataframe(df):
+def clean_dataframe(df: pd.DataFrame) -> pd.DataFrame:
     """
     Nettoyage minimal :
     - trim des noms de colonnes
@@ -101,7 +101,7 @@ def clean_dataframe(df):
     return df
 
 
-def validate_schema(df):
+def validate_schema(df: pd.DataFrame) -> None:
     missing_columns = sorted(set(REQUIRED_COLUMNS) - set(df.columns))
     if missing_columns:
         raise ValueError(f"Colonnes manquantes : {missing_columns}")
@@ -126,40 +126,24 @@ def run_quality_checks(df: pd.DataFrame) -> None:
         )
 
 
-def save_outputs(df: pd.DataFrame, source: str) -> None:
-    con = duckdb.connect()
-    con.register("stress_df", df)
-    con.execute(
-        f"COPY stress_df TO '{OUTPUT_PARQUET.as_posix()}' (FORMAT PARQUET)"
-    )
+def load_latest_data(source: str | None = None) -> pd.DataFrame:
+    resolved_source = resolve_source(source)
 
-    metadata = {
-        "source": source,
-        "n_rows": int(df.shape[0]),
-        "n_columns": int(df.shape[1]),
-        "columns": list(df.columns),
-        "output_file": str(OUTPUT_PARQUET.relative_to(ROOT_DIR)),
-    }
-
-    OUTPUT_METADATA.write_text(
-        json.dumps(metadata, indent=2, ensure_ascii=False),
-        encoding="utf-8",
-    )
-
-    logger.info("Fichier écrit : %s", OUTPUT_PARQUET)
-    logger.info("Métadonnées écrites : %s", OUTPUT_METADATA)
-
-
-def main():
-    # Ecrase la source par variable d'environnement dans GitHub Actions
-    source = os.getenv("SOURCE_URL", URL_RAW)
-
-    df = read_source(source)
+    df = read_source(resolved_source)
     df = clean_dataframe(df)
     validate_schema(df)
     run_quality_checks(df)
-    save_outputs(df, source)
 
+    logger.info(
+        "Dataset prêt pour l'analyse : %s lignes, %s colonnes.",
+        df.shape[0],
+        df.shape[1],
+    )
+    return df
+
+
+def main() -> None:
+    load_latest_data()
     logger.info("Ingestion terminée avec succès.")
 
 

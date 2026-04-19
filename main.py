@@ -1,9 +1,7 @@
 import argparse
 import logging
 
-import duckdb
-
-from src.config import RAW_DATA_PATH
+from scripts.ingest import load_latest_data
 from src.evaluation import (
     save_all_confusion_matrices,
     save_all_logistic_artifacts,
@@ -34,14 +32,7 @@ args = parser.parse_args()
 target_col = args.target_col
 logging.info("Variable cible utilisée : %s", target_col)
 
-if not RAW_DATA_PATH.exists():
-    raise FileNotFoundError(
-        f"Fichier introuvable : {RAW_DATA_PATH}. "
-        "Lancez d'abord : python -m scripts.ingest"
-    )
-
-con = duckdb.connect(database=":memory:")
-df = con.sql(f"SELECT * FROM read_parquet('{RAW_DATA_PATH.as_posix()}')").to_df()
+df = load_latest_data()
 
 x_train, x_test, y_train, y_test, scaler = prepare_datasets(df, target_col)
 
