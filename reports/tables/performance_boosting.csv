@@ -1,0 +1,2 @@
+model_name,rmse_train,rmse_test,parametres,variables_utilisees
+GradientBoosting,0.30318569049844074,0.4348478161210213,"{'n_estimators': 50, 'max_depth': 3, 'learning_rate': 0.05}","reussite_academique, qualite_sommeil, relation_prof_etudiant, besoins_elementaires, estime_de_soi"

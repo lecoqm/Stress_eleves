@@ -1,0 +1,2 @@
+model_name,rmse_train,rmse_test,parametres,variables_utilisees
+RandomForest,0.32093814283019617,0.4273110546812419,"{'n_estimators': 200, 'min_samples_split': 10, 'max_depth': 3}","reussite_academique, qualite_sommeil, relation_prof_etudiant, besoins_elementaires, estime_de_soi"
