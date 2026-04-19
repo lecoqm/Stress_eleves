@@ -8,7 +8,7 @@ execute:
 ---
 
 
-On réalise une régression logistique sans pénalisation, pour avoir un premier aperçu de la performance d'un modèle simple. La variable d'intérêt (ou le label), encodant le niveau de stress, peut prendre trois valeurs 0, 1, 2. On choisit de comparer la régression multi-classes à la méthode OneVsRest qui fixe une classe de référence et concatène les deux autres afin d'effectuer une régression binaire. Etant donné que notre variable stress est encodée selon trois niveaux, trois régressions OneVsRest sont possibles.
+On réalise deux types de régressions : avec et sans pénalisation. La variable d’intérêt, relative au niveau de stress, encode trois modalités différentes. Or une régression logistique classique est utile pour la classification binaire. On choisit donc de comparer dans le cas de la régression sans pénalisation les méthodes multiclasse et *One Vs Rest*. On réalise enfin une régression Lasso, afin d’avoir un aperçu des variables explicatives les moins importantes (mises à zéro) et d’obtenir un modèle plus parcimonieux. On réalise directement une régression avec validation croisée, afin de sélectionner la valeur de pénalisation fournissant les meilleurs résultats. On obtient pour ces trois modèles des performances équivalentes. 
 
 
 ```{python}
@@ -28,9 +28,11 @@ roc_summary = pd.read_csv(TABLES_DIR / "roc_logistic_summary.csv")
 coef_multiclass = coef_multiclass.rename(columns={coef_multiclass.columns[0]: "variable"})
 coef_ovr = coef_ovr.rename(columns={coef_ovr.columns[0]: "variable"})
 
-```
+lasso_metrics = pd.read_csv(TABLES_DIR / "lasso_metrics.csv")
+coef_lasso = pd.read_csv(TABLES_DIR / "lasso_cv_coefficients.csv")
+lasso_best_c = pd.read_csv(TABLES_DIR / "lasso_best_c.csv")
 
-On retrouve ci-dessus les coefficients de la régression logistique multiclasse associées aux variables pour pour chacune des classes $0, 1, 2$. Les résultats de la régression OneVsRest ci-dessous, eux correspondent aux coefficients que l'on obtient lorsque la classe $i\in\{0,1,2\}$ est prise comme référence et que les deux autres classes sont concaténées comme contrepartie. Il s'agit de coefficients dans chacun des trois cas à une régression pour un problème de classification binaire.
+```
 
 ```{python}
 logistic_metrics
@@ -53,7 +55,7 @@ top_multiclass = (
 )
 
 display(Markdown("### Variables les plus influentes — modèle multiclasse"))
-display(Markdown("Nous pouvons également repérer les variables les plus influentes"))
+display(Markdown("Nous pouvons également repérer les variables ayant le plus d'impact dans les régressions."))
 top_multiclass
 ```
 
@@ -61,23 +63,6 @@ top_multiclass
 coef_ovr
 ```
 
-```{python}
-abs_ovr = coef_ovr.copy()
-for col in abs_ovr.columns[1:]:
-    abs_ovr[col] = abs(abs_ovr[col])
-
-top_ovr = (
-    abs_ovr
-    .assign(max_abs_coef=abs_ovr.iloc[:, 1:].max(axis=1))
-    .sort_values("max_abs_coef", ascending=False)
-    .loc[:, ["variable", "max_abs_coef"]]
-    .head(10)
-)
-
-display(Markdown("### Variables les plus influentes — modèle One-vs-Rest"))
-display(Markdown("Nous pouvons également repérer les variables les plus influentes"))
-top_ovr
-```
 
 En utilisant ces modèles nous pouvons donc prédire les labels correspondants. Afin de comparer les performances des différents modèles, nous nous intéressons à leur matrice de confusion, afin de visualiser la répartitions des labels, ainsi que les métriques classiques : accuracy, précision et recall.
 
@@ -119,9 +104,55 @@ roc_macro
 
 
 ## Courbes ROC
-Afin d'afiner la comparaison des modèles, nous traçons les différentes aux courbes ROC des régressions, méthode par méthode.
+Une autre manière de visualiser les performances des trois modèles et de tracer les courbes ROC. Les résultats des trois méthodes sont très satisfaisants et comparables.
 
 Nous observons que les deux méthodes de régressions fournissent des résultats équivalents, les courbes sont superposées, il n'y en n'a pas une très clairement au dessus de l'autre dans chacun des trois cas.
 
 Les résultats des prédictions sont pour les deux méthodes, les meilleurs s'agissant de la classe 1 et les moins bons s'agissant de la classe 0.
 ![](../reports/figures/roc_logistic_comparison.png)
+
+```{python}
+roc_summary
+```
+
+
+```{python}
+abs_ovr = coef_ovr.copy()
+for col in abs_ovr.columns[1:]:
+    abs_ovr[col] = abs(abs_ovr[col])
+
+top_ovr = (
+    abs_ovr
+    .assign(max_abs_coef=abs_ovr.iloc[:, 1:].max(axis=1))
+    .sort_values("max_abs_coef", ascending=False)
+    .loc[:, ["variable", "max_abs_coef"]]
+    .head(10)
+)
+
+display(Markdown("### Variables les plus influentes — modèle One-vs-Rest"))
+display(Markdown("Enfin, ces modèles nous permettent d’évaluer l’influence des variables explicatives sur la variable d’intérêt (ici le niveau de stress) :"))
+top_ovr
+```
+
+La tension artérielle et le soutien social ressortent comme les variables ayant en valeur absolue le plus grand impact.
+La régression Lasso nous permet d’exclure certaines variables en mettant leur coefficient à zéro. Nous obtenons :
+
+```{python}
+coef_lasso
+```
+
+# Validation croisée
+
+Pour améliorer cette régression, nous réalisons des régressions par validation croisée afin de choisir au mieux la constante de pénalisation $C$ associée au modèle Lasso.
+
+On donne les intervalles de confiance de l'*accuracy score* pour chacun des trois modèles de régression. Pour les deux premiers, sans pénalisation, les résultats sont presque égaux, avec une incertitude plus élevée pour la régression multiclasse que OneVsRest. Si l'*accuracy score* semble plus élevé pour la régression Lasso, en réalité l'intervalle de confiance est également plus grand *ie* le modèle est moins précis.
+
+```{python}
+lasso_best_c
+```
+
+Enfin, nous regardons la matrice de confusion de cette nouvelle régression, ainsi que les courbes ROC, classe par classe.
+
+![](../reports/figures/confusion_lasso_cv.png)
+
+Le modèle Lasso avec constante choisie par validation croisée a un score AUC aussi bon que le modèle OneVsRest dans les trois cas. On dispose donc d'un modèle plus parcimonieux avec des performances équivalentes au modèle incluant toutes les variables explicatives.

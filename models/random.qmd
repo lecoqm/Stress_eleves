@@ -21,6 +21,7 @@ performance_trees = pd.read_csv(TABLES_DIR / "performance_trees.csv")
 random_forest_feature_importance = pd.read_csv(TABLES_DIR / "random_forest_feature_importance.csv")
 tree_model_comparison = pd.read_csv(TABLES_DIR / "roc_logistic_summary.csv")
 lasso_selected_variables = pd.read_csv(TABLES_DIR / "lasso_selected_variables.csv")
+performance_boosting = pd.read_csv(TABLES_DIR / "performance_boosting.csv")
 
 
 ```
@@ -37,15 +38,16 @@ En entrainant une forêt aléatoire, les *features* les plus importances sont le
 ![](../reports/figures/random_forest_feature_importance.png)
 
 
-Nous choisissons dans la suite de considérer un dataset 'X_S' ne conservant que les cinq premières variables par ordre d'importance données ci-dessus. Nous choisissons également de limiter la profondeur de l'arbre à 10 afin d'éviter l'overfitting, puis à 5.
-En partant de cet arbre, nous passons à une forêt aléatoire.
+Nous choisissons dans la suite de considérer la même base de données avec un nombre de variables explicatives réduit aux cinq plus importantes données par le résultat ci-dessus. Le but est d’obtenir un modèle parcimonieux et plus facilement interprétable et visualisable qu’en conservant les vingt variables explicatives initiales. Nous entraînons un modèle de forêt aléatoire sur les données, directement avec *fine tuning* des paramètres (nombre d’arbres, profondeur, nombre minimal de données pour chaque *split*). Nous évaluons la performance du modèle en calculant la racine de l’erreur quadratique sur les échantillons *train* (contrôle de l’*overfitting*) et *test*.
+Le résultat obtenu est le suivant : 
 
-L'erreur est minimale pour $5\leq n\leq10$ arbres dans la forêt. Seulement, cette dernière varie en fait très fortement jusqu'à $n \simeq 20-25$. Nous évaluons donc le modèle pour deux forêts de $n=25$ et $n=60$ arbres respectivement. Dans le dernier cas, on choisit un nombre d'arbres suffisamment important pour être certains d'être dans une zone où l'erreur s'est stabilisée autour d'une valeur minimale ($0.4$ environ). On diminue également le nombre d'arbres fixé par défaut à $100$. Cependant, pour les mêmes arguments, on aurait aussi bien pu prendre comme comparaison de $25$, $n=40$ ou $50$ arbres.
 
 ```{python}
 performance_random_forest
 ```
 
-De même, on observe que l'erreur chute au delà de $n \geq 5$ arbres et se stabilise pour $n \geq 25$ arbres environ. Afin de comparer les résultats on estime aussi les erreurs pour deux forêts de $60$ et $25$ arbres.
+On compare les résultats du modèle de forêts aléatoire au *Gradient Boosting*, une extension a priori un plus performante de ces modèles. On *fine tune* ici aussi directement les paramètres afin d’obtenir directement le modèle le plus performant possible. On constate que l’erreur réalisée est légèrement plus importante que celle obtenue avec le modèle de forêts aléatoires. 
 
-La forêt de $60$ arbres donne de meilleurs résultats que la forêt de $25$ arbres dans les deux cas. Néanmoins la différence n'est pas flagrante si l'on considère les modèles S sur le jeu de données restreint.
+```{python}
+performance_boosting
+```

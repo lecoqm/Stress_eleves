@@ -23,14 +23,14 @@ p {
 .cell-output {
 background-color: transparent;
 border-radius: 4px;
-font-size: 12px; 
+font-size: 14px; 
 }
 
 /* Styles pour les sorties standard de cellules */
 .cell-output-stdout {
 background-color: transparent;
 border-radius: 4px;
-font-size: 12px; 
+font-size: 14px; 
 }
 
 /* Police du code */

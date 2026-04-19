@@ -20,12 +20,8 @@ website:
         menu:
           - href: models/reglog.qmd
             text: Régressions logistiques
-          - href: models/lasso.qmd
-            text: Régression Lasso
           - href: models/random.qmd
             text: Forêt aléatoire
-          - href: models/boosting.qmd
-            text: Boosting
       - href: slides.qmd
         text: Slides
 
