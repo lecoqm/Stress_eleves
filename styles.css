@@ -60,7 +60,7 @@ font-size: 12px;
 
 /* Images : taille réduite par défaut */
 .reveal .slides img {
-  max-width: 85%;
+  max-width: 70%;
   height: auto;
   display: block;
   margin: 0 auto;
@@ -68,7 +68,7 @@ font-size: 12px;
 
 /* Variante encore plus compacte pour certaines slides */
 .reveal .small-img img {
-  max-width: 60%;
+  max-width: 40%;
 }
 
 /* Tables dans les slides */
@@ -87,7 +87,7 @@ font-size: 12px;
 
 /* Tables plus petites si besoin */
 .reveal .small-table table {
-  font-size: 0.58em;
+  font-size: 0.35em;
 }
 
 .reveal .small-table th,
