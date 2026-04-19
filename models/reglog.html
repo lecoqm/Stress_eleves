@@ -196,7 +196,7 @@ window.Quarto = {
 
 
 <p>On réalise deux types de régressions : avec et sans pénalisation. La variable d’intérêt, relative au niveau de stress, encode trois modalités différentes. Or une régression logistique classique est utile pour la classification binaire. On choisit donc de comparer dans le cas de la régression sans pénalisation les méthodes multiclasse et <em>One Vs Rest</em>. On réalise enfin une régression Lasso, afin d’avoir un aperçu des variables explicatives les moins importantes (mises à zéro) et d’obtenir un modèle plus parcimonieux. On réalise directement une régression avec validation croisée, afin de sélectionner la valeur de pénalisation fournissant les meilleurs résultats. On obtient pour ces trois modèles des performances équivalentes.</p>
-<div id="9d922b0f" class="cell" data-execution_count="2">
+<div id="fad6203b" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display" data-execution_count="2">
 <div>
 
@@ -239,7 +239,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<div id="f597cdec" class="cell" data-execution_count="3">
+<div id="d029ec6f" class="cell" data-execution_count="3">
 <section id="variables-les-plus-influentes-modèle-multiclasse" class="level3 cell-output cell-output-display cell-output-markdown">
 <h3 class="anchored" data-anchor-id="variables-les-plus-influentes-modèle-multiclasse">Variables les plus influentes — modèle multiclasse</h3>
 </section>
@@ -315,7 +315,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<div id="97d716fb" class="cell" data-execution_count="4">
+<div id="930ee718" class="cell" data-execution_count="4">
 <div class="cell-output cell-output-display" data-execution_count="4">
 <div>
 
@@ -485,7 +485,7 @@ window.Quarto = {
 </div>
 </div>
 <p>En utilisant ces modèles nous pouvons donc prédire les labels correspondants. Afin de comparer les performances des différents modèles, nous nous intéressons à leur matrice de confusion, afin de visualiser la répartitions des labels, ainsi que les métriques classiques : accuracy, précision et recall.</p>
-<div id="da849465" class="cell" data-execution_count="5">
+<div id="47e681d4" class="cell" data-execution_count="5">
 <div class="cell-output cell-output-display cell-output-markdown">
 <p><strong>Meilleur modèle logistique selon l’accuracy :</strong> <code>OneVsRest</code> avec une accuracy de <strong>0.886</strong>.</p>
 </div>
@@ -499,7 +499,7 @@ window.Quarto = {
 <section id="régression-logistique-one-vs-rest" class="level3">
 <h3 class="anchored" data-anchor-id="régression-logistique-one-vs-rest">Régression logistique One-vs-Rest</h3>
 <p><img src="../reports/figures/confusion_logistic_ovr.png" class="img-fluid"></p>
-<div id="f8a3c726" class="cell" data-execution_count="6">
+<div id="780b5407" class="cell" data-execution_count="6">
 <div class="cell-output cell-output-display" data-execution_count="6">
 <div>
 
@@ -593,7 +593,7 @@ window.Quarto = {
 </div>
 </div>
 </section>
-<div id="53b50cd0" class="cell" data-execution_count="7">
+<div id="a4c1d5ca" class="cell" data-execution_count="7">
 <section id="comparaison-macro-auc" class="level3 cell-output cell-output-display cell-output-markdown">
 <h3 class="anchored" data-anchor-id="comparaison-macro-auc">Comparaison macro-AUC</h3>
 </section>
@@ -641,7 +641,7 @@ window.Quarto = {
 <p>Une autre manière de visualiser les performances des trois modèles est de tracer les courbes ROC. Les résultats des trois méthodes sont très satisfaisants et comparables.</p>
 <p>Nous observons que les deux méthodes de régressions fournissent des résultats équivalents, les courbes sont superposées, il n’y en n’a pas une très clairement au dessus de l’autre dans chacun des trois cas.</p>
 <p>Les résultats des prédictions sont pour les deux méthodes, les meilleurs s’agissant de la classe 1 et les moins bons s’agissant de la classe 0. <img src="../reports/figures/roc_logistic_comparison.png" class="img-fluid"></p>
-<div id="bfdafcc7" class="cell" data-execution_count="8">
+<div id="d2eb0dfe" class="cell" data-execution_count="8">
 <div class="cell-output cell-output-display" data-execution_count="8">
 <div>
 
@@ -734,7 +734,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<div id="00dc3ef1" class="cell" data-execution_count="9">
+<div id="e0938231" class="cell" data-execution_count="9">
 <section id="variables-les-plus-influentes-modèle-one-vs-rest" class="level3 cell-output cell-output-display cell-output-markdown">
 <h3 class="anchored" data-anchor-id="variables-les-plus-influentes-modèle-one-vs-rest">Variables les plus influentes — modèle One-vs-Rest</h3>
 </section>
@@ -811,7 +811,7 @@ window.Quarto = {
 </div>
 </div>
 <p>La tension artérielle et le soutien social ressortent comme les variables ayant en valeur absolue le plus grand impact. La régression Lasso nous permet d’exclure certaines variables en mettant leur coefficient à zéro. Nous obtenons :</p>
-<div id="88091e09" class="cell" data-execution_count="10">
+<div id="6ad8094f" class="cell" data-execution_count="10">
 <div class="cell-output cell-output-display" data-execution_count="10">
 <div>
 
@@ -985,7 +985,7 @@ window.Quarto = {
 <h1>Validation croisée</h1>
 <p>Pour améliorer cette régression, nous réalisons des régressions par validation croisée afin de choisir au mieux la constante de pénalisation <span class="math inline">\(C\)</span> associée au modèle Lasso.</p>
 <p>On donne les intervalles de confiance de l’<em>accuracy score</em> pour chacun des trois modèles de régression. Pour les deux premiers, sans pénalisation, les résultats sont presque égaux, avec une incertitude plus élevée pour la régression multiclasse que OneVsRest. Si l’<em>accuracy score</em> semble plus élevé pour la régression Lasso, en réalité l’intervalle de confiance est également plus grand <em>ie</em> le modèle est moins précis.</p>
-<div id="807145d1" class="cell" data-execution_count="11">
+<div id="43399336" class="cell" data-execution_count="11">
 <div class="cell-output cell-output-display" data-execution_count="11">
 <div>
 
