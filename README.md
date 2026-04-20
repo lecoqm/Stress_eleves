@@ -59,11 +59,16 @@ ou
 ```bash
 uv run main.py --target_col mavariable
 ```
-### Ingestion de nouvelles données
+Si l'utilisateur souhaite appliquer le code à un nouveau jeu de données, par exemple une nouvelle version de l'enquête, chargeable à partir de l'url `url_source` : 
 
-Pour ajouter un nouveau jeu de données sur lequel exécuter le code, faire : 
 ```bash
-uv run scripts/ingest.py
+python main.py --url url_source
+```
+
+ou
+
+```bash
+uv run main.py --url url_source
 ```
 
 ### Structure du dépôt
