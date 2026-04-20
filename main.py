@@ -27,12 +27,23 @@ parser.add_argument(
     default="niveau_stress",
     help="Variable cible",
 )
+parser.add_argument(
+    "--url",
+    type=str,
+    default=None,
+    help="url avec les données à télécharger"
+)
 args = parser.parse_args()
 
 target_col = args.target_col
 logging.info("Variable cible utilisée : %s", target_col)
 
-df = load_latest_data()
+URL = args.url
+if URL:
+    df = load_latest_data(URL)
+    logging.info("URL utilisée : %s", URL)
+else:
+    df = load_latest_data()
 
 x_train, x_test, y_train, y_test, scaler = prepare_datasets(df, target_col)
 
