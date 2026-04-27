@@ -156,7 +156,7 @@ ul.task-list li input[type="checkbox"] {
 
 <p>Nous choisissons ensuite de tester un type de modèle différent : la forêt aléatoire, en espérant améliorer encore les performances.</p>
 <p>Pour rappel, avec le modèle de régression Lasso, on avait en regroupant les résultats des trois régressions possibles :</p>
-<div id="2627317e" class="cell" data-execution_count="2">
+<div id="2e97d659" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display" data-execution_count="2">
 <div>
 
@@ -286,7 +286,7 @@ ul.task-list li input[type="checkbox"] {
 <p>En entrainant une forêt aléatoire, les <em>features</em> les plus importances sont les suivantes.</p>
 <p><img src="../reports/figures/random_forest_feature_importance.png" class="img-fluid"></p>
 <p>Nous choisissons dans la suite de considérer la même base de données avec un nombre de variables explicatives réduit aux cinq plus importantes données par le résultat ci-dessus. Le but est d’obtenir un modèle parcimonieux et plus facilement interprétable et visualisable qu’en conservant les vingt variables explicatives initiales. Nous entraînons un modèle de forêt aléatoire sur les données, directement avec <em>fine tuning</em> des paramètres (nombre d’arbres, profondeur, nombre minimal de données pour chaque <em>split</em>). Nous évaluons la performance du modèle en calculant la racine de l’erreur quadratique sur les échantillons <em>train</em> (contrôle de l’<em>overfitting</em>) et <em>test</em>. Le résultat obtenu est le suivant :</p>
-<div id="7d1255c6" class="cell" data-execution_count="3">
+<div id="b171b400" class="cell" data-execution_count="3">
 <div class="cell-output cell-output-display" data-execution_count="3">
 <div>
 
@@ -318,7 +318,7 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 <p>On compare les résultats du modèle de forêt aléatoire au <em>Gradient Boosting</em>, une extension a priori un plus performante de ces modèles. On <em>fine tune</em> ici aussi directement les paramètres afin d’obtenir directement le modèle le plus performant possible. On constate que l’erreur réalisée est légèrement plus importante que celle obtenue avec le modèle de forêts aléatoires.</p>
-<div id="5e7e5d8b" class="cell" data-execution_count="4">
+<div id="61d54881" class="cell" data-execution_count="4">
 <div class="cell-output cell-output-display" data-execution_count="4">
 <div>
 
