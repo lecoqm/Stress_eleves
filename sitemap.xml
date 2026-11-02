@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://lecoqm.github.io/Stress_eleves/slides.html</loc>
-    <lastmod>2026-10-26T10:35:34.086Z</lastmod>
-  </url>
-  <url>
-    <loc>https://lecoqm.github.io/Stress_eleves/models/reglog.html</loc>
-    <lastmod>2026-10-26T10:35:34.076Z</lastmod>
-  </url>
-  <url>
-    <loc>https://lecoqm.github.io/Stress_eleves/notebooks/TP.html</loc>
-    <lastmod>2026-10-26T10:35:34.081Z</lastmod>
-  </url>
-  <url>
     <loc>https://lecoqm.github.io/Stress_eleves/index.html</loc>
-    <lastmod>2026-10-26T10:35:34.075Z</lastmod>
+    <lastmod>2026-11-02T12:54:31.686Z</lastmod>
   </url>
   <url>
     <loc>https://lecoqm.github.io/Stress_eleves/models/random.html</loc>
-    <lastmod>2026-10-26T10:35:34.075Z</lastmod>
+    <lastmod>2026-11-02T12:54:31.686Z</lastmod>
+  </url>
+  <url>
+    <loc>https://lecoqm.github.io/Stress_eleves/slides.html</loc>
+    <lastmod>2026-11-02T12:54:31.700Z</lastmod>
+  </url>
+  <url>
+    <loc>https://lecoqm.github.io/Stress_eleves/models/reglog.html</loc>
+    <lastmod>2026-11-02T12:54:31.687Z</lastmod>
+  </url>
+  <url>
+    <loc>https://lecoqm.github.io/Stress_eleves/notebooks/TP.html</loc>
+    <lastmod>2026-11-02T12:54:31.694Z</lastmod>
   </url>
 </urlset>
